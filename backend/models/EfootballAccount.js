@@ -4,7 +4,6 @@ const efootballSchema = new mongoose.Schema(
   {
     title: { type: String, required: true },
     image: { type: String, required: true },
-    region: { type: String, required: true },
     ptw: { type: Number, default: 0 },
     coins: { type: Number, default: 0 },
     highestRank: { type: String, required: true },
@@ -16,9 +15,7 @@ const efootballSchema = new mongoose.Schema(
     description: { type: String, required: true },
     price: { type: Number, required: true },
     badge: { type: String, default: null },
-    verified: { type: Boolean, default: false },
     level: { type: Number, required: true },
-    status: { type: String, default: "Active" },
     features: [{ type: String }],
     game: { type: String, default: "efootball" },
   },

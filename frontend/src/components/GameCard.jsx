@@ -12,7 +12,6 @@ export default function GameCard({ data, onHover, onLeave }) {
     image,
     badge,
     title,
-    region,
     highestRank,
     rarity,
     ptw,
@@ -30,7 +29,6 @@ export default function GameCard({ data, onHover, onLeave }) {
     >
       <div className="id-card-img">
         <img src={image} alt={title} />
-        <span className="id-card-region">{region}</span>
         {badge && (
           <span className={`id-card-badge ${badge.toLowerCase()}`}>
             {badge}
@@ -46,7 +44,7 @@ export default function GameCard({ data, onHover, onLeave }) {
         <div className="id-card-features">
           <span className="feature-tag">{formatNum(ptw)} PTW</span>
           <span className="feature-tag">{formatNum(coins)} Coins</span>
-          {features.slice(0, 2).map((f, i) => (
+          {features?.slice(0, 2).map((f, i) => (
             <span key={i} className="feature-tag">
               {f}
             </span>

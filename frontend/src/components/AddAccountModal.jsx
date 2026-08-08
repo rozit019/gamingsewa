@@ -1,63 +1,100 @@
-import { useState } from "react";
-import { useAuth } from "../hooks/useAuth";
+import { useState, useEffect } from "react";
 
-export default function AddAccountModal({ onClose, onAdded }) {
-  const { user } = useAuth();
+export default function AccountModal({
+  mode,
+  initialData,
+  onClose,
+  onSuccess,
+}) {
   const [form, setForm] = useState({
     title: "",
-    image: "",
-    region: "Global",
-    ptw: 0,
-    coins: 0,
     highestRank: "",
     rarity: "Rare",
     description: "",
     price: "",
     badge: "",
-    verified: false,
     level: "",
-    status: "Active",
+    ptw: 0,
+    coins: 0,
     features: "",
   });
+  const [imageFile, setImageFile] = useState(null);
+  const [preview, setPreview] = useState(null);
+  const [uploading, setUploading] = useState(false);
+
+  useEffect(() => {
+    if (initialData) {
+      setForm({
+        title: initialData.title || "",
+        highestRank: initialData.highestRank || "",
+        rarity: initialData.rarity || "Rare",
+        description: initialData.description || "",
+        price: initialData.price || "",
+        badge: initialData.badge || "",
+        level: initialData.level || "",
+        ptw: initialData.ptw || 0,
+        coins: initialData.coins || 0,
+        features: initialData.features?.join(", ") || "",
+      });
+      setPreview(initialData.image || null);
+    }
+  }, [initialData]);
 
   const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setForm((prev) => ({
-      ...prev,
-      [name]: type === "checkbox" ? checked : value,
-    }));
+    const { name, value } = e.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleFile = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setImageFile(file);
+      setPreview(URL.createObjectURL(file));
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (mode === "add" && !imageFile && !preview) {
+      alert("Please select an image");
+      return;
+    }
+
+    setUploading(true);
     const token = localStorage.getItem("token");
 
-    const payload = {
-      ...form,
-      ptw: Number(form.ptw),
-      coins: Number(form.coins),
-      price: Number(form.price),
-      level: Number(form.level),
-      features: form.features
-        .split(",")
-        .map((f) => f.trim())
-        .filter(Boolean),
-    };
+    const formData = new FormData();
+    if (imageFile) formData.append("image", imageFile);
+    formData.append("title", form.title);
+    formData.append("highestRank", form.highestRank);
+    formData.append("rarity", form.rarity);
+    formData.append("description", form.description);
+    formData.append("price", form.price);
+    formData.append("badge", form.badge);
+    formData.append("level", form.level);
+    formData.append("ptw", form.ptw);
+    formData.append("coins", form.coins);
+    formData.append("features", form.features);
 
-    const res = await fetch("http://localhost:5000/api/efootball", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(payload),
+    const url =
+      mode === "edit"
+        ? `http://localhost:5000/api/efootball/${initialData._id}`
+        : "http://localhost:5000/api/efootball";
+    const method = mode === "edit" ? "PUT" : "POST";
+
+    const res = await fetch(url, {
+      method,
+      headers: { Authorization: `Bearer ${token}` },
+      body: formData,
     });
 
+    setUploading(false);
+
     if (res.ok) {
-      onAdded();
-      onClose();
+      onSuccess();
     } else {
-      alert("Failed to add account");
+      const err = await res.json();
+      alert(err.message || "Request failed");
     }
   };
 
@@ -67,7 +104,7 @@ export default function AddAccountModal({ onClose, onAdded }) {
         className="modal-content modal-wide"
         onClick={(e) => e.stopPropagation()}
       >
-        <h2>Add eFootball Account</h2>
+        <h2>{mode === "edit" ? "Edit Account" : "Add eFootball Account"}</h2>
         <form onSubmit={handleSubmit} className="add-form">
           <div className="form-grid">
             <input
@@ -77,20 +114,17 @@ export default function AddAccountModal({ onClose, onAdded }) {
               onChange={handleChange}
               required
             />
-            <input
-              name="image"
-              placeholder="Image URL"
-              value={form.image}
-              onChange={handleChange}
-              required
-            />
-            <input
-              name="region"
-              placeholder="Region"
-              value={form.region}
-              onChange={handleChange}
-              required
-            />
+            <div className="file-input-wrapper">
+              <input
+                type="file"
+                accept="image/*"
+                id="accImage"
+                onChange={handleFile}
+              />
+              <label htmlFor="accImage" className="file-label">
+                {imageFile ? imageFile.name : "Choose Image"}
+              </label>
+            </div>
             <input
               name="highestRank"
               placeholder="Highest Rank"
@@ -141,18 +175,19 @@ export default function AddAccountModal({ onClose, onAdded }) {
               onChange={handleChange}
             />
             <input
-              name="status"
-              placeholder="Status"
-              value={form.status}
-              onChange={handleChange}
-            />
-            <input
               name="features"
               placeholder="Features (comma separated)"
               value={form.features}
               onChange={handleChange}
             />
           </div>
+
+          {preview && (
+            <div className="image-preview">
+              <img src={preview} alt="Preview" />
+            </div>
+          )}
+
           <textarea
             name="description"
             placeholder="Description"
@@ -161,17 +196,12 @@ export default function AddAccountModal({ onClose, onAdded }) {
             required
             rows={3}
           />
-          <label className="checkbox-label">
-            <input
-              name="verified"
-              type="checkbox"
-              checked={form.verified}
-              onChange={handleChange}
-            />
-            Verified Seller
-          </label>
-          <button type="submit" className="btn-primary">
-            Add Account
+          <button type="submit" className="btn-primary" disabled={uploading}>
+            {uploading
+              ? "Saving..."
+              : mode === "edit"
+                ? "Update Account"
+                : "Add Account"}
           </button>
         </form>
         <button className="modal-close" onClick={onClose}>

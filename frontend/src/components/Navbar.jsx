@@ -173,12 +173,9 @@ export default function Navbar({
             {isAdmin ? (
               <>
                 <span className="admin-label">Admin</span>
-                <button
-                  className="btn-register"
-                  onClick={() => setShowAdd(true)}
-                >
-                  + Add Game
-                </button>
+                <a href="/admin" className="btn-register">
+                  Dashboard
+                </a>
                 <button className="btn-login" onClick={logout}>
                   Logout
                 </button>
