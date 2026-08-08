@@ -1,0 +1,189 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap");
+
+:root {
+  /* Backgrounds */
+  --bg-body: #060e1f;
+  --bg-surface: #0f172a;
+  --bg-surface-raised: #0b1221;
+  --bg-card: rgba(12, 26, 51, 0.6);
+  --bg-input: #1e293b;
+  --bg-hover: rgba(30, 58, 138, 0.15);
+
+  /* Primary Blue */
+  --color-primary: #3b82f6;
+  --color-primary-light: #60a5fa;
+  --color-primary-dark: #1d4ed8;
+  --color-primary-glow: rgba(29, 78, 216, 0.3);
+
+  /* Accent / Utility */
+  --color-accent: #f59e0b;
+  --color-accent-light: #fbbf24;
+  --color-success: #22c55e;
+  --color-danger: #dc2626;
+
+  /* Game Accents */
+  --color-ml: #fbbf24;
+  --color-coc: #f87171;
+
+  /* Text */
+  --text-primary: #f1f5f9;
+  --text-secondary: #e2e8f0;
+  --text-muted: #94a3b8;
+  --text-dim: #64748b;
+  --text-faint: #475569;
+
+  /* Borders */
+  --border-subtle: rgba(148, 163, 184, 0.1);
+  --border-blue: rgba(59, 130, 246, 0.2);
+  --border-blue-strong: rgba(59, 130, 246, 0.3);
+
+  /* Spacing */
+  --section-pad-x: 80px;
+  --section-pad-y: 100px;
+  --max-width: 1400px;
+
+  /* Transitions */
+  --transition-fast: 0.2s ease;
+  --transition-base: 0.3s ease;
+  --transition-slow: 0.35s ease;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: "Inter", sans-serif;
+  background-color: var(--bg-body);
+  color: var(--text-secondary);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font-family: inherit;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+/* Game logo images */
+.game-logo-img {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  border-radius: 8px;
+  display: block;
+}
+
+.banner-game-logo {
+  width: 56px;
+  height: 56px;
+  object-fit: contain;
+  display: block;
+}
+
+/* Card image badges */
+.id-card-img {
+  position: relative;
+}
+
+.id-card-region {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  padding: 4px 10px;
+  background: rgba(6, 14, 31, 0.75);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(59, 130, 246, 0.25);
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #93c5fd;
+}
+
+.id-card-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px; /* moved to right so it doesn't overlap region */
+  left: auto;
+  padding: 4px 10px;
+  background: rgba(6, 14, 31, 0.7);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(59, 130, 246, 0.2);
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #93c5fd;
+}
+
+.id-card-badge.hot {
+  background: rgba(220, 38, 38, 0.7);
+  border-color: rgba(220, 38, 38, 0.3);
+  color: #fecaca;
+}
+
+.id-card-rarity {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.rarity-legendary {
+  background: rgba(180, 83, 9, 0.35);
+  border: 1px solid rgba(251, 191, 36, 0.4);
+  color: #fbbf24;
+}
+
+.rarity-epic {
+  background: rgba(124, 58, 237, 0.25);
+  border: 1px solid rgba(139, 92, 246, 0.35);
+  color: #c4b5fd;
+}
+
+.rarity-rare {
+  background: rgba(30, 58, 138, 0.35);
+  border: 1px solid rgba(59, 130, 246, 0.35);
+  color: #93c5fd;
+}
+
+.rarity-common {
+  background: rgba(100, 116, 139, 0.25);
+  border: 1px solid rgba(148, 163, 184, 0.3);
+  color: #94a3b8;
+}
+
+/* Detail panel badges */
+.detail-badge.region {
+  background: rgba(8, 145, 178, 0.2);
+  border: 1px solid rgba(34, 211, 238, 0.3);
+  color: #67e8f9;
+}
+
+.detail-badge.rarity {
+  background: rgba(180, 83, 9, 0.2);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  color: #fbbf24;
+}
