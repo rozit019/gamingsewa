@@ -1,14 +1,25 @@
 import { useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { AuthProvider } from "./hooks/useAuth";
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
-import Efootball from "./pages/Efootball"; // ← import the new page
+import Efootball from "./pages/Efootball";
 
 function App() {
+  return (
+    <AuthProvider>
+      <BrowserRouter>
+        <AppContent />
+      </BrowserRouter>
+    </AuthProvider>
+  );
+}
+
+function AppContent() {
   const [announcementVisible, setAnnouncementVisible] = useState(true);
 
   return (
-    <BrowserRouter>
+    <>
       <Navbar
         announcementVisible={announcementVisible}
         setAnnouncementVisible={setAnnouncementVisible}
@@ -20,7 +31,7 @@ function App() {
         />
         <Route path="/efootball" element={<Efootball />} />
       </Routes>
-    </BrowserRouter>
+    </>
   );
 }
 

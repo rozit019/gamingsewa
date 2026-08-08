@@ -214,16 +214,15 @@ export function useAccounts(gameFilter = null, limit = null) {
 
   useEffect(() => {
     setLoading(true);
-    // Replace this setTimeout with:
-    // fetch(`/api/accounts?game=${gameFilter}&limit=${limit}`)
-    const timer = setTimeout(() => {
-      let data = [...MOCK_DB];
-      if (gameFilter) data = data.filter((i) => i.game === gameFilter);
-      if (limit) data = data.slice(0, limit);
-      setAccounts(data);
-      setLoading(false);
-    }, 300);
-    return () => clearTimeout(timer);
+    fetch("http://localhost:5000/api/efootball")
+      .then((res) => res.json())
+      .then((data) => {
+        let result = data;
+        if (gameFilter) result = result.filter((i) => i.game === gameFilter);
+        if (limit) result = result.slice(0, limit);
+        setAccounts(result);
+        setLoading(false);
+      });
   }, [gameFilter, limit]);
 
   return { accounts, loading };

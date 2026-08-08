@@ -1,10 +1,16 @@
 import { useState, useEffect } from "react";
+import { useAuth } from "../hooks/useAuth";
+import LoginModal from "./LoginModal";
+import AddAccountModal from "./AddAccountModal";
 
 export default function Navbar({
   announcementVisible,
   setAnnouncementVisible,
 }) {
   const [scrolled, setScrolled] = useState(false);
+  const [showLogin, setShowLogin] = useState(false);
+  const [showAdd, setShowAdd] = useState(false);
+  const { user, isAdmin, logout } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -12,6 +18,9 @@ export default function Navbar({
       if (hero) {
         const heroBottom = hero.offsetTop + hero.offsetHeight;
         setScrolled(window.scrollY > heroBottom - 140);
+      } else {
+        // For pages without hero (e.g., eFootball page)
+        setScrolled(window.scrollY > 60);
       }
     };
     window.addEventListener("scroll", handleScroll);
@@ -47,7 +56,7 @@ export default function Navbar({
       >
         <div className="nav-inner">
           <div className="nav-left">
-            <a href="#home" className="logo-badge">
+            <a href="/" className="logo-badge">
               <div className="logo-shield">
                 <span className="logo-line1">YOUR</span>
                 <span className="logo-line2">PLATFORM</span>
@@ -56,7 +65,7 @@ export default function Navbar({
 
             <ul className="nav-links">
               <li>
-                <a href="#home">
+                <a href="/">
                   <svg
                     className="nav-icon"
                     viewBox="0 0 24 24"
@@ -73,7 +82,7 @@ export default function Navbar({
                 </a>
               </li>
               <li>
-                <a href="#buy">
+                <a href="/#buy">
                   <svg
                     className="nav-icon"
                     viewBox="0 0 24 24"
@@ -108,7 +117,7 @@ export default function Navbar({
                 </a>
               </li>
               <li>
-                <a href="#mobilelegends">
+                <a href="/mobile-legends">
                   <svg
                     className="nav-icon"
                     viewBox="0 0 24 24"
@@ -124,7 +133,7 @@ export default function Navbar({
                 </a>
               </li>
               <li>
-                <a href="#coc">
+                <a href="/clash-of-clans">
                   <svg
                     className="nav-icon"
                     viewBox="0 0 24 24"
@@ -160,8 +169,32 @@ export default function Navbar({
                 </svg>
               </button>
             </div>
-            <button className="btn-login">Login</button>
-            <button className="btn-register">Register</button>
+
+            {isAdmin ? (
+              <>
+                <span className="admin-label">Admin</span>
+                <button
+                  className="btn-register"
+                  onClick={() => setShowAdd(true)}
+                >
+                  + Add Game
+                </button>
+                <button className="btn-login" onClick={logout}>
+                  Logout
+                </button>
+              </>
+            ) : (
+              <>
+                <button
+                  className="btn-login"
+                  onClick={() => setShowLogin(true)}
+                >
+                  Login
+                </button>
+                <button className="btn-register">Register</button>
+              </>
+            )}
+
             <button className="mobile-menu-btn" aria-label="Menu">
               <svg
                 width="24"
@@ -177,6 +210,14 @@ export default function Navbar({
           </div>
         </div>
       </nav>
+
+      {showLogin && <LoginModal onClose={() => setShowLogin(false)} />}
+      {showAdd && (
+        <AddAccountModal
+          onClose={() => setShowAdd(false)}
+          onAdded={() => window.location.reload()}
+        />
+      )}
     </>
   );
 }
