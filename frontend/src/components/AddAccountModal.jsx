@@ -1,23 +1,24 @@
 import { useState, useEffect } from "react";
 
-export default function AccountModal({
+const EMPTY_FORM = {
+  title: "",
+  highestRank: "",
+  rarity: "Rare",
+  description: "",
+  price: "",
+  badge: "",
+  ptw: 0,
+  coins: 0,
+  features: "",
+};
+
+export default function AddAccountModal({
   mode,
   initialData,
   onClose,
   onSuccess,
 }) {
-  const [form, setForm] = useState({
-    title: "",
-    highestRank: "",
-    rarity: "Rare",
-    description: "",
-    price: "",
-    badge: "",
-    level: "",
-    ptw: 0,
-    coins: 0,
-    features: "",
-  });
+  const [form, setForm] = useState({ ...EMPTY_FORM });
   const [imageFile, setImageFile] = useState(null);
   const [preview, setPreview] = useState(null);
   const [uploading, setUploading] = useState(false);
@@ -31,12 +32,17 @@ export default function AccountModal({
         description: initialData.description || "",
         price: initialData.price || "",
         badge: initialData.badge || "",
-        level: initialData.level || "",
         ptw: initialData.ptw || 0,
         coins: initialData.coins || 0,
         features: initialData.features?.join(", ") || "",
       });
       setPreview(initialData.image || null);
+      setImageFile(null);
+    } else {
+      // CRITICAL: Reset form when adding new
+      setForm({ ...EMPTY_FORM });
+      setPreview(null);
+      setImageFile(null);
     }
   }, [initialData]);
 
@@ -71,7 +77,6 @@ export default function AccountModal({
     formData.append("description", form.description);
     formData.append("price", form.price);
     formData.append("badge", form.badge);
-    formData.append("level", form.level);
     formData.append("ptw", form.ptw);
     formData.append("coins", form.coins);
     formData.append("features", form.features);
@@ -82,21 +87,36 @@ export default function AccountModal({
         : "http://localhost:5000/api/efootball";
     const method = mode === "edit" ? "PUT" : "POST";
 
-    const res = await fetch(url, {
-      method,
-      headers: { Authorization: `Bearer ${token}` },
-      body: formData,
-    });
+    try {
+      const res = await fetch(url, {
+        method,
+        headers: { Authorization: `Bearer ${token}` },
+        body: formData,
+      });
 
-    setUploading(false);
+      setUploading(false);
 
-    if (res.ok) {
-      onSuccess();
-    } else {
-      const err = await res.json();
-      alert(err.message || "Request failed");
+      if (res.ok) {
+        onSuccess();
+      } else {
+        const err = await res.json();
+        alert(err.message || "Request failed");
+      }
+    } catch (err) {
+      setUploading(false);
+      alert("Network error. Is the backend running?");
     }
   };
+
+  const field = (label, hint, input) => (
+    <div className="form-field">
+      <label className="form-label">
+        {label}
+        <span className="form-hint">{hint}</span>
+      </label>
+      {input}
+    </div>
+  );
 
   return (
     <div className="modal-overlay" onClick={onClose}>
@@ -106,14 +126,21 @@ export default function AccountModal({
       >
         <h2>{mode === "edit" ? "Edit Account" : "Add eFootball Account"}</h2>
         <form onSubmit={handleSubmit} className="add-form">
-          <div className="form-grid">
+          {field(
+            "Account Title",
+            "Shown on card. e.g. Messi + Ronaldo Squad",
             <input
               name="title"
-              placeholder="Title"
+              placeholder="Messi + Ronaldo Squad"
               value={form.title}
               onChange={handleChange}
               required
-            />
+            />,
+          )}
+
+          {field(
+            "Account Image",
+            "Upload a screenshot of the account",
             <div className="file-input-wrapper">
               <input
                 type="file"
@@ -122,65 +149,10 @@ export default function AccountModal({
                 onChange={handleFile}
               />
               <label htmlFor="accImage" className="file-label">
-                {imageFile ? imageFile.name : "Choose Image"}
+                {imageFile ? imageFile.name : "Click to choose image"}
               </label>
-            </div>
-            <input
-              name="highestRank"
-              placeholder="Highest Rank"
-              value={form.highestRank}
-              onChange={handleChange}
-              required
-            />
-            <select name="rarity" value={form.rarity} onChange={handleChange}>
-              <option>Common</option>
-              <option>Rare</option>
-              <option>Epic</option>
-              <option>Legendary</option>
-            </select>
-            <input
-              name="level"
-              type="number"
-              placeholder="Level"
-              value={form.level}
-              onChange={handleChange}
-              required
-            />
-            <input
-              name="ptw"
-              type="number"
-              placeholder="PTW"
-              value={form.ptw}
-              onChange={handleChange}
-            />
-            <input
-              name="coins"
-              type="number"
-              placeholder="Coins"
-              value={form.coins}
-              onChange={handleChange}
-            />
-            <input
-              name="price"
-              type="number"
-              placeholder="Price ($)"
-              value={form.price}
-              onChange={handleChange}
-              required
-            />
-            <input
-              name="badge"
-              placeholder="Badge (Hot/empty)"
-              value={form.badge}
-              onChange={handleChange}
-            />
-            <input
-              name="features"
-              placeholder="Features (comma separated)"
-              value={form.features}
-              onChange={handleChange}
-            />
-          </div>
+            </div>,
+          )}
 
           {preview && (
             <div className="image-preview">
@@ -188,14 +160,103 @@ export default function AccountModal({
             </div>
           )}
 
-          <textarea
-            name="description"
-            placeholder="Description"
-            value={form.description}
-            onChange={handleChange}
-            required
-            rows={3}
-          />
+          <div className="form-grid">
+            {field(
+              "Highest Rank",
+              "Best rank achieved. e.g. Division 1",
+              <input
+                name="highestRank"
+                placeholder="Division 1"
+                value={form.highestRank}
+                onChange={handleChange}
+                required
+              />,
+            )}
+
+            {field(
+              "Rarity Tier",
+              "Select card rarity color",
+              <select name="rarity" value={form.rarity} onChange={handleChange}>
+                <option>Common</option>
+                <option>Rare</option>
+                <option>Epic</option>
+                <option>Legendary</option>
+              </select>,
+            )}
+
+            {field(
+              "PTW Count",
+              "Pay-to-win items or skins. e.g. 2300",
+              <input
+                name="ptw"
+                type="number"
+                placeholder="2300"
+                value={form.ptw}
+                onChange={handleChange}
+              />,
+            )}
+
+            {field(
+              "Coins",
+              "In-game currency amount. e.g. 4500",
+              <input
+                name="coins"
+                type="number"
+                placeholder="4500"
+                value={form.coins}
+                onChange={handleChange}
+              />,
+            )}
+
+            {field(
+              "Price (NRS)",
+              "Selling price in Rupees. e.g. 8999",
+              <input
+                name="price"
+                type="number"
+                placeholder="8999"
+                value={form.price}
+                onChange={handleChange}
+                required
+              />,
+            )}
+
+            {field(
+              "Badge",
+              "Leave empty, or type Hot",
+              <input
+                name="badge"
+                placeholder="Hot"
+                value={form.badge}
+                onChange={handleChange}
+              />,
+            )}
+
+            {field(
+              "Feature Tags",
+              "Comma separated. e.g. 15 Iconics, Full Team",
+              <input
+                name="features"
+                placeholder="15 Iconics, Full Team"
+                value={form.features}
+                onChange={handleChange}
+              />,
+            )}
+          </div>
+
+          {field(
+            "Description",
+            "Full details buyers see on hover",
+            <textarea
+              name="description"
+              placeholder="Ultimate dream team featuring both GOATs..."
+              value={form.description}
+              onChange={handleChange}
+              required
+              rows={4}
+            />,
+          )}
+
           <button type="submit" className="btn-primary" disabled={uploading}>
             {uploading
               ? "Saving..."
@@ -204,7 +265,7 @@ export default function AccountModal({
                 : "Add Account"}
           </button>
         </form>
-        <button className="modal-close" onClick={onClose}>
+        <button type="button" className="modal-close" onClick={onClose}>
           ×
         </button>
       </div>

@@ -51,10 +51,7 @@ export default function GameCard({ data, onHover, onLeave }) {
           ))}
         </div>
         <div className="id-card-footer">
-          <div className="id-price">
-            ${price}
-            <span>.00</span>
-          </div>
+          <div className="id-price">Rs. {price}</div>
           <button className="btn-buy">Buy Now</button>
         </div>
       </div>

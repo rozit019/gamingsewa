@@ -10,25 +10,18 @@ export default function DetailPanel({
   const {
     title,
     description,
-    region,
     ptw,
     coins,
     highestRank,
     rarity,
     price,
-    verified,
-    level,
-    status,
     features,
   } = activeCard;
 
   const badges = [
     { type: "rank", text: highestRank },
-    { type: "level", text: `Lv ${level}` },
-    { type: "region", text: region },
     { type: "rarity", text: rarity },
   ];
-  if (verified) badges.push({ type: "verified", text: "Verified" });
 
   function fmt(n) {
     if (n >= 1000000) return `${(n / 1000000).toFixed(0)}M`;
@@ -60,10 +53,6 @@ export default function DetailPanel({
           <span className="meta-highlight">{highestRank}</span>
         </div>
         <div className="meta-row">
-          <span>Level</span>
-          <span className="meta-highlight">{level}</span>
-        </div>
-        <div className="meta-row">
           <span>PTW</span>
           <span className="meta-highlight">{fmt(ptw)}</span>
         </div>
@@ -72,16 +61,8 @@ export default function DetailPanel({
           <span className="meta-highlight">{fmt(coins)}</span>
         </div>
         <div className="meta-row">
-          <span>Region</span>
-          <span className="meta-highlight">{region}</span>
-        </div>
-        <div className="meta-row">
           <span>Rarity</span>
           <span className="meta-highlight">{rarity}</span>
-        </div>
-        <div className="meta-row">
-          <span>Status</span>
-          <span className="meta-highlight">{status}</span>
         </div>
       </div>
       <div className="detail-features-popup">
@@ -92,10 +73,7 @@ export default function DetailPanel({
         ))}
       </div>
       <div className="detail-footer-popup">
-        <div className="detail-price-popup">
-          ${price}
-          <span>.00</span>
-        </div>
+        <div className="detail-price-popup">Rs. {price}</div>
         <button className="btn-detail-buy">
           <svg viewBox="0 0 24 24">
             <path d="M5 3l14 9-14 9V3z" />

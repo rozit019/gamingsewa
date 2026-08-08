@@ -15,7 +15,6 @@ const efootballSchema = new mongoose.Schema(
     description: { type: String, required: true },
     price: { type: Number, required: true },
     badge: { type: String, default: null },
-    level: { type: Number, required: true },
     features: [{ type: String }],
     game: { type: String, default: "efootball" },
   },

@@ -228,21 +228,21 @@ export default function Home() {
         gameKey="efootball"
         title="eFootball Accounts"
         subtitle="Premium squads with legendary players and high GP balance"
-        logoSrc="/efootball-logo.png"
+        logoSrc="/e.webp"
         limit={3}
       />
       <GameSection
         gameKey="mobilelegends"
         title="Mobile Legends Accounts"
         subtitle="High-rank accounts with rare skins and maxed emblems"
-        logoSrc="/ml-logo.png"
+        logoSrc="/m.webp"
         limit={3}
       />
       <GameSection
         gameKey="coc"
         title="Clash of Clans Accounts"
         subtitle="Maxed bases with high-level heroes and stacked resources"
-        logoSrc="/coc-logo.png"
+        logoSrc="/coc.webp"
         limit={3}
       />
     </>

@@ -1,5 +1,11 @@
 import { useState } from "react";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Navigate,
+  useLocation,
+} from "react-router-dom";
 import { AuthProvider } from "./hooks/useAuth.jsx";
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
@@ -18,6 +24,9 @@ function App() {
 }
 
 function AppContent() {
+  const location = useLocation();
+  const isAdmin = location.pathname.startsWith("/admin");
+
   const [announcementVisible, setAnnouncementVisible] = useState(() => {
     return sessionStorage.getItem("announcementClosed") !== "true";
   });
@@ -29,10 +38,12 @@ function AppContent() {
 
   return (
     <>
-      <Navbar
-        announcementVisible={announcementVisible}
-        setAnnouncementVisible={closeAnnouncement}
-      />
+      {!isAdmin && (
+        <Navbar
+          announcementVisible={announcementVisible}
+          setAnnouncementVisible={closeAnnouncement}
+        />
+      )}
       <Routes>
         <Route
           path="/"
@@ -40,7 +51,6 @@ function AppContent() {
         />
         <Route path="/efootball" element={<Efootball />} />
 
-        {/* Admin routes */}
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<Navigate to="efootball" replace />} />
           <Route path="efootball" element={<AdminEfootball />} />

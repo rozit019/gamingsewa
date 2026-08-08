@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import AccountModal from "../../components/AddAccountModal";
+import AddAccountModal from "../../components/AddAccountModal";
 
 export default function AdminEfootball() {
   const [accounts, setAccounts] = useState([]);
@@ -14,7 +14,7 @@ export default function AdminEfootball() {
       const data = await res.json();
       setAccounts(data);
     } catch (err) {
-      console.error(err);
+      console.error("Fetch error:", err);
     } finally {
       setLoading(false);
     }
@@ -39,11 +39,13 @@ export default function AdminEfootball() {
   };
 
   const openAdd = () => {
+    console.log("Opening add modal");
     setEditData(null);
     setModalMode("add");
   };
 
   const openEdit = (account) => {
+    console.log("Opening edit modal", account);
     setEditData(account);
     setModalMode("edit");
   };
@@ -63,7 +65,12 @@ export default function AdminEfootball() {
     <div className="admin-page">
       <div className="admin-header">
         <h1>eFootball Accounts</h1>
-        <button className="btn-register" onClick={openAdd}>
+        <button
+          type="button"
+          className="btn-register"
+          onClick={openAdd}
+          style={{ position: "relative", zIndex: 20 }}
+        >
           + Add New
         </button>
       </div>
@@ -78,7 +85,6 @@ export default function AdminEfootball() {
                 <th>Image</th>
                 <th>Title</th>
                 <th>Rank</th>
-                <th>Lv</th>
                 <th>Rarity</th>
                 <th>PTW</th>
                 <th>Coins</th>
@@ -98,7 +104,6 @@ export default function AdminEfootball() {
                   </td>
                   <td className="td-title">{acc.title}</td>
                   <td>{acc.highestRank}</td>
-                  <td>{acc.level}</td>
                   <td>
                     <span
                       className={`rarity-pill rarity-${acc.rarity.toLowerCase()}`}
@@ -108,10 +113,11 @@ export default function AdminEfootball() {
                   </td>
                   <td>{fmt(acc.ptw)}</td>
                   <td>{fmt(acc.coins)}</td>
-                  <td>${acc.price}</td>
+                  <td>Rs. {acc.price}</td>
                   <td>
                     <div className="table-actions">
                       <button
+                        type="button"
                         className="btn-icon edit"
                         onClick={() => openEdit(acc)}
                         title="Edit"
@@ -127,6 +133,7 @@ export default function AdminEfootball() {
                         </svg>
                       </button>
                       <button
+                        type="button"
                         className="btn-icon delete"
                         onClick={() => handleDelete(acc._id)}
                         title="Delete"
@@ -147,7 +154,7 @@ export default function AdminEfootball() {
               ))}
               {accounts.length === 0 && (
                 <tr>
-                  <td colSpan="9" className="td-empty">
+                  <td colSpan="8" className="td-empty">
                     No accounts found.
                   </td>
                 </tr>
@@ -158,7 +165,8 @@ export default function AdminEfootball() {
       )}
 
       {modalMode && (
-        <AccountModal
+        <AddAccountModal
+          key={modalMode + (editData?._id || "new")}
           mode={modalMode}
           initialData={editData}
           onClose={closeModal}

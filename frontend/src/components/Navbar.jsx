@@ -1,7 +1,15 @@
 import { useState, useEffect } from "react";
+import { useLocation, Link } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import LoginModal from "./LoginModal";
 import AddAccountModal from "./AddAccountModal";
+
+// ─── Nav Icon Images ───────────────────────────────────────
+const NAV_ICONS = {
+  efootball: "/e.webp",
+  "mobile-legends": "/m.webp",
+};
+// ───────────────────────────────────────────────────────────
 
 export default function Navbar({
   announcementVisible,
@@ -19,7 +27,6 @@ export default function Navbar({
         const heroBottom = hero.offsetTop + hero.offsetHeight;
         setScrolled(window.scrollY > heroBottom - 140);
       } else {
-        // For pages without hero (e.g., eFootball page)
         setScrolled(window.scrollY > 60);
       }
     };
@@ -56,16 +63,16 @@ export default function Navbar({
       >
         <div className="nav-inner">
           <div className="nav-left">
-            <a href="/" className="logo-badge">
+            <Link to="/" className="logo-badge">
               <div className="logo-shield">
-                <span className="logo-line1">YOUR</span>
-                <span className="logo-line2">PLATFORM</span>
+                <span className="logo-line1">GAMING</span>
+                <span className="logo-line2">SEWA</span>
               </div>
-            </a>
+            </Link>
 
             <ul className="nav-links">
               <li>
-                <a href="/">
+                <Link to="/">
                   <svg
                     className="nav-icon"
                     viewBox="0 0 24 24"
@@ -79,10 +86,10 @@ export default function Navbar({
                     <polyline points="9 22 9 12 15 12 15 22"></polyline>
                   </svg>
                   Home
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="/#buy">
+                <Link to="/#buy">
                   <svg
                     className="nav-icon"
                     viewBox="0 0 24 24"
@@ -97,43 +104,55 @@ export default function Navbar({
                     <path d="M16 10a4 4 0 0 1-8 0"></path>
                   </svg>
                   Buy
-                </a>
+                </Link>
               </li>
+
+              {/* ─── eFootball with Logo ─── */}
               <li>
-                <a href="/efootball">
-                  <svg
+                <Link to="/efootball">
+                  <img
+                    src={NAV_ICONS.efootball}
+                    alt="eFootball"
                     className="nav-icon"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <circle cx="12" cy="12" r="10"></circle>
-                    <path d="M12 2v20M2 12h20M4.93 4.93l14.14 14.14M19.07 4.93L4.93 19.07"></path>
-                  </svg>
+                    style={{
+                      width: "20px",
+                      height: "20px",
+                      objectFit: "contain",
+                      display: "inline-block",
+                      verticalAlign: "middle",
+                    }}
+                    onError={(e) => {
+                      e.target.style.display = "none";
+                    }}
+                  />
                   eFootball
-                </a>
+                </Link>
               </li>
+
+              {/* ─── Mobile Legends with Logo ─── */}
               <li>
-                <a href="/mobile-legends">
-                  <svg
+                <Link to="/mobile-legends">
+                  <img
+                    src={NAV_ICONS["mobile-legends"]}
+                    alt="Mobile Legends"
                     className="nav-icon"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
-                  </svg>
+                    style={{
+                      width: "20px",
+                      height: "20px",
+                      objectFit: "contain",
+                      display: "inline-block",
+                      verticalAlign: "middle",
+                    }}
+                    onError={(e) => {
+                      e.target.style.display = "none";
+                    }}
+                  />
                   Mobile Legends
-                </a>
+                </Link>
               </li>
+
               <li>
-                <a href="/clash-of-clans">
+                <Link to="/clash-of-clans">
                   <svg
                     className="nav-icon"
                     viewBox="0 0 24 24"
@@ -147,7 +166,7 @@ export default function Navbar({
                     <circle cx="12" cy="7" r="4"></circle>
                   </svg>
                   Account
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
@@ -173,9 +192,9 @@ export default function Navbar({
             {isAdmin ? (
               <>
                 <span className="admin-label">Admin</span>
-                <a href="/admin" className="btn-register">
+                <Link to="/admin" className="btn-register">
                   Dashboard
-                </a>
+                </Link>
                 <button className="btn-login" onClick={logout}>
                   Logout
                 </button>
