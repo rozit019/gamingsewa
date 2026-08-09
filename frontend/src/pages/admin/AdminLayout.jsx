@@ -1,9 +1,11 @@
+import { useState } from "react";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 
 export default function AdminLayout() {
   const { logout, isAdmin } = useAuth();
   const navigate = useNavigate();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   if (!isAdmin) {
     return (
@@ -19,7 +21,36 @@ export default function AdminLayout() {
 
   return (
     <div className="admin-layout">
-      <aside className="admin-sidebar">
+      {/* Mobile Hamburger */}
+      <button
+        className="mobile-admin-toggle"
+        onClick={() => setSidebarOpen(true)}
+        aria-label="Menu"
+      >
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+        >
+          <line x1="3" y1="6" x2="21" y2="6" />
+          <line x1="3" y1="12" x2="21" y2="12" />
+          <line x1="3" y1="18" x2="21" y2="18" />
+        </svg>
+      </button>
+
+      {/* Overlay */}
+      {sidebarOpen && (
+        <div
+          className="admin-sidebar-overlay"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+
+      {/* Sidebar */}
+      <aside className={`admin-sidebar ${sidebarOpen ? "open" : ""}`}>
         <div className="sidebar-brand">
           <span className="logo-shield-mini">
             <span>YP</span>
@@ -33,6 +64,7 @@ export default function AdminLayout() {
             className={({ isActive }) =>
               `sidebar-link ${isActive ? "active" : ""}`
             }
+            onClick={() => setSidebarOpen(false)}
           >
             <svg
               viewBox="0 0 24 24"
@@ -76,7 +108,11 @@ export default function AdminLayout() {
         </nav>
 
         <div className="sidebar-footer">
-          <a href="/" className="sidebar-link back-link">
+          <a
+            href="/"
+            className="sidebar-link back-link"
+            onClick={() => setSidebarOpen(false)}
+          >
             <svg
               width="18"
               height="18"

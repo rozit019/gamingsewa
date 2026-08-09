@@ -1,4 +1,8 @@
 import { useState } from "react";
+import { openWhatsApp } from "../utils/whatsapp";
+
+// Your business WhatsApp number
+const BUSINESS_WHATSAPP = "9779841580244";
 
 export default function DetailPanel({
   activeCard,
@@ -10,10 +14,11 @@ export default function DetailPanel({
   const [lightboxImg, setLightboxImg] = useState(null);
   const [lightboxTitle, setLightboxTitle] = useState("");
 
-  // If nothing is active AND lightbox is closed, render nothing
   if (!activeCard && !lightboxImg) return null;
 
   const {
+    id,
+    game,
     image,
     title,
     description,
@@ -49,9 +54,20 @@ export default function DetailPanel({
     setLightboxTitle("");
   };
 
+  const handleBuyNow = () => {
+    openWhatsApp(BUSINESS_WHATSAPP, {
+      id,
+      game,
+      title,
+      price,
+      highestRank,
+      rarity,
+    });
+  };
+
   return (
     <>
-      {/* ── Detail Panel (only when hovering a card) ── */}
+      {/* Detail Panel */}
       {activeCard && (
         <div
           className={`detail-panel ${panelLeftSide ? "left-side" : ""} active`}
@@ -59,7 +75,6 @@ export default function DetailPanel({
           onMouseEnter={onEnter}
           onMouseLeave={onLeave}
         >
-          {/* Thumbnail */}
           {image && (
             <div
               className="detail-image-thumb"
@@ -124,7 +139,7 @@ export default function DetailPanel({
 
           <div className="detail-footer-popup">
             <div className="detail-price-popup">Rs. {price}</div>
-            <button className="btn-detail-buy">
+            <button className="btn-detail-buy" onClick={handleBuyNow}>
               <svg viewBox="0 0 24 24">
                 <path d="M5 3l14 9-14 9V3z" />
               </svg>
@@ -139,7 +154,7 @@ export default function DetailPanel({
         </div>
       )}
 
-      {/* ── Lightbox (completely independent) ── */}
+      {/* Lightbox */}
       {lightboxImg && (
         <div className="detail-lightbox" onClick={closeLightbox}>
           <img src={lightboxImg} alt={lightboxTitle} />

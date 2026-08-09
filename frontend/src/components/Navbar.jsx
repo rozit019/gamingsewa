@@ -41,11 +41,13 @@ export default function Navbar({
   const openLogin = () => {
     setShowRegister(false);
     setShowLogin(true);
+    setMobileOpen(false);
   };
 
   const openRegister = () => {
     setShowLogin(false);
     setShowRegister(true);
+    setMobileOpen(false);
   };
 
   return (
@@ -54,8 +56,9 @@ export default function Navbar({
         <div className="announcement-bar" id="announcementBar">
           <div className="announcement-inner">
             <span className="announcement-text">
-              <span className="announcement-x">×</span>
-              Mobile Legends (Nepal) Available Now
+              <span className="announcement-x"></span>
+              Mobile Legends and coc accounts are coming soon! Stay tuned for
+              updates.
             </span>
             <button
               className="announcement-close"
@@ -88,7 +91,7 @@ export default function Navbar({
             />
           </Link>
 
-          {/* Desktop Links */}
+          {/* Desktop + Mobile Links */}
           <ul className={`glass-links ${mobileOpen ? "open" : ""}`}>
             <li>
               <Link to="/" onClick={() => setMobileOpen(false)}>
@@ -126,9 +129,64 @@ export default function Navbar({
                 Mobile Legends
               </Link>
             </li>
+
+            {/* ── MOBILE AUTH ITEMS ── */}
+            <li className="mobile-auth">
+              {user ? (
+                <>
+                  {isAdmin ? (
+                    <>
+                      <span className="glass-admin">Admin</span>
+                      <Link
+                        to="/admin"
+                        className="glass-btn glass-btn-primary"
+                        onClick={() => setMobileOpen(false)}
+                      >
+                        Dashboard
+                      </Link>
+                    </>
+                  ) : (
+                    <>
+                      <span className="glass-user">{user.username}</span>
+                      <Link
+                        to="/profile"
+                        className="glass-btn glass-btn-ghost"
+                        onClick={() => setMobileOpen(false)}
+                      >
+                        Profile
+                      </Link>
+                    </>
+                  )}
+                  <button
+                    className="glass-btn glass-btn-ghost"
+                    onClick={() => {
+                      logout();
+                      setMobileOpen(false);
+                    }}
+                  >
+                    Logout
+                  </button>
+                </>
+              ) : (
+                <>
+                  <button
+                    className="glass-btn glass-btn-ghost mobile-auth-btn"
+                    onClick={openLogin}
+                  >
+                    Login
+                  </button>
+                  <button
+                    className="glass-btn glass-btn-primary mobile-auth-btn"
+                    onClick={openRegister}
+                  >
+                    Register
+                  </button>
+                </>
+              )}
+            </li>
           </ul>
 
-          {/* Right Side */}
+          {/* Right Side (Desktop Only) */}
           <div className="glass-right">
             <div className="glass-search">
               <svg
@@ -146,43 +204,49 @@ export default function Navbar({
               <input type="text" placeholder="Search accounts..." />
             </div>
 
-            {user ? (
-              <>
-                {isAdmin ? (
-                  <>
-                    <span className="glass-admin">Admin</span>
-                    <Link to="/admin" className="glass-btn glass-btn-primary">
-                      Dashboard
-                    </Link>
-                  </>
-                ) : (
-                  <>
-                    <span className="glass-user">{user.username}</span>
-                    <Link to="/profile" className="glass-btn glass-btn-ghost">
-                      Profile
-                    </Link>
-                  </>
-                )}
-                <button className="glass-btn glass-btn-ghost" onClick={logout}>
-                  Logout
-                </button>
-              </>
-            ) : (
-              <>
-                <button
-                  className="glass-btn glass-btn-ghost"
-                  onClick={openLogin}
-                >
-                  Login
-                </button>
-                <button
-                  className="glass-btn glass-btn-primary"
-                  onClick={openRegister}
-                >
-                  Register
-                </button>
-              </>
-            )}
+            {/* Desktop Auth */}
+            <div className="desktop-auth">
+              {user ? (
+                <>
+                  {isAdmin ? (
+                    <>
+                      <span className="glass-admin">Admin</span>
+                      <Link to="/admin" className="glass-btn glass-btn-primary">
+                        Dashboard
+                      </Link>
+                    </>
+                  ) : (
+                    <>
+                      <span className="glass-user">{user.username}</span>
+                      <Link to="/profile" className="glass-btn glass-btn-ghost">
+                        Profile
+                      </Link>
+                    </>
+                  )}
+                  <button
+                    className="glass-btn glass-btn-ghost"
+                    onClick={logout}
+                  >
+                    Logout
+                  </button>
+                </>
+              ) : (
+                <>
+                  <button
+                    className="glass-btn glass-btn-ghost"
+                    onClick={openLogin}
+                  >
+                    Login
+                  </button>
+                  <button
+                    className="glass-btn glass-btn-primary"
+                    onClick={openRegister}
+                  >
+                    Register
+                  </button>
+                </>
+              )}
+            </div>
 
             {/* Mobile Toggle */}
             <button

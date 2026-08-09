@@ -13,6 +13,7 @@ import Efootball from "./pages/Efootball";
 import AdminLayout from "./pages/admin/AdminLayout";
 import AdminEfootball from "./pages/admin/AdminEfootball";
 import Profile from "./pages/profile";
+import FloatingHelp from "./components/FloatingHelp";
 
 function App() {
   return (
@@ -58,6 +59,7 @@ function AppContent() {
           <Route path="efootball" element={<AdminEfootball />} />
         </Route>
       </Routes>
+      <FloatingHelp />
     </>
   );
 }

@@ -40,11 +40,7 @@ export default function Efootball() {
       <section className="page-banner">
         <div className="banner-inner">
           <div className="banner-icon">
-            <img
-              src="/efootball-logo.png"
-              alt="eFootball"
-              className="banner-game-logo"
-            />
+            <img src="/e.webp" alt="eFootball" className="banner-game-logo" />
           </div>
           <h1>eFootball Accounts</h1>
           <p>
@@ -59,11 +55,7 @@ export default function Efootball() {
           <div className="section-title-group">
             <h2>
               <span className="game-icon">
-                <img
-                  src="/efootball-logo.png"
-                  alt="eFootball"
-                  className="game-logo-img"
-                />
+                <img src="/e.webp" alt="eFootball" className="game-logo-img" />
               </span>
               Available Accounts
             </h2>

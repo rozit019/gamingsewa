@@ -1,4 +1,5 @@
 import { useRef } from "react";
+import { openWhatsApp } from "../utils/whatsapp";
 
 function formatNum(n) {
   if (n >= 1000000) return `${(n / 1000000).toFixed(0)}M`;
@@ -6,9 +7,14 @@ function formatNum(n) {
   return n;
 }
 
+// Your business WhatsApp number
+const BUSINESS_WHATSAPP = "9779841580244";
+
 export default function GameCard({ data, onHover, onLeave }) {
   const cardRef = useRef(null);
   const {
+    id,
+    game,
     image,
     badge,
     title,
@@ -19,6 +25,18 @@ export default function GameCard({ data, onHover, onLeave }) {
     price,
     features,
   } = data;
+
+  const handleBuyNow = (e) => {
+    e.stopPropagation();
+    openWhatsApp(BUSINESS_WHATSAPP, {
+      id,
+      game,
+      title,
+      price,
+      highestRank,
+      rarity,
+    });
+  };
 
   return (
     <div
@@ -52,7 +70,7 @@ export default function GameCard({ data, onHover, onLeave }) {
         </div>
         <div className="id-card-footer">
           <div className="id-price">Rs. {price}</div>
-          <button className="btn-buy" onClick={(e) => e.stopPropagation()}>
+          <button className="btn-buy" onClick={handleBuyNow}>
             Buy Now
           </button>
         </div>

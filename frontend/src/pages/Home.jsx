@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import Navbar from "../components/Navbar";
 import GameCard from "../components/GameCard";
 import DetailPanel from "../components/DetailPanel";
+import SellAccountModal from "../components/SellAccountModal";
 import { useAccounts } from "../hooks/useAccounts";
 
 /* ═══════════════════════════════════════════════════
@@ -313,6 +314,7 @@ function GameSection({ gameKey, title, subtitle, logoSrc, limit = 3 }) {
 export default function Home() {
   const [rotation, setRotation] = useState([0, 1, 2]);
   const [isPaused, setIsPaused] = useState(false);
+  const [showSellModal, setShowSellModal] = useState(false);
 
   const rotateNext = useCallback(
     () => setRotation((p) => [p[2], p[0], p[1]]),
@@ -472,6 +474,7 @@ export default function Home() {
                   fontSize: "0.9rem",
                   fontWeight: 600,
                 }}
+                onClick={() => setShowSellModal(true)}
               >
                 Sell Ids
               </button>
@@ -501,6 +504,11 @@ export default function Home() {
         logoSrc="/coc.webp"
         limit={3}
       />
+
+      {/* Sell Account Modal */}
+      {showSellModal && (
+        <SellAccountModal onClose={() => setShowSellModal(false)} />
+      )}
     </>
   );
 }
