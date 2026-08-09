@@ -12,6 +12,7 @@ import Home from "./pages/Home";
 import Efootball from "./pages/Efootball";
 import AdminLayout from "./pages/admin/AdminLayout";
 import AdminEfootball from "./pages/admin/AdminEfootball";
+import Profile from "./pages/profile";
 
 function App() {
   return (
@@ -50,6 +51,7 @@ function AppContent() {
           element={<Home announcementVisible={announcementVisible} />}
         />
         <Route path="/efootball" element={<Efootball />} />
+        <Route path="/profile" element={<Profile />} />
 
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<Navigate to="efootball" replace />} />

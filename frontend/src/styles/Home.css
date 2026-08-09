@@ -1158,3 +1158,228 @@
 .game-section {
   overflow: visible !important;
 }
+/* ════════════════════════════════════════
+   SCROLL REVEAL ANIMATION
+   ════════════════════════════════════════ */
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition:
+    opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Stagger children */
+.reveal .stagger-child {
+  opacity: 0;
+  transform: translateY(20px);
+  transition:
+    opacity 0.5s ease,
+    transform 0.5s ease;
+}
+
+.reveal.visible .stagger-child:nth-child(1) {
+  transition-delay: 0.08s;
+}
+.reveal.visible .stagger-child:nth-child(2) {
+  transition-delay: 0.16s;
+}
+.reveal.visible .stagger-child:nth-child(3) {
+  transition-delay: 0.24s;
+}
+.reveal.visible .stagger-child:nth-child(4) {
+  transition-delay: 0.32s;
+}
+.reveal.visible .stagger-child:nth-child(5) {
+  transition-delay: 0.4s;
+}
+.reveal.visible .stagger-child:nth-child(6) {
+  transition-delay: 0.48s;
+}
+
+.reveal.visible .stagger-child {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ════════════════════════════════════════
+   PANEL POSITIONING FIX
+   ════════════════════════════════════════ */
+.game-section {
+  position: relative !important;
+}
+
+.detail-panel {
+  position: absolute !important;
+  width: 340px;
+  z-index: 100;
+}
+
+.split-layout,
+.left-grid,
+.right-sidebar,
+.cards-grid,
+.game-section {
+  overflow: visible !important;
+}
+
+/* ════════════════════════════════════════
+   SPLIT LAYOUT (eFootball)
+   ════════════════════════════════════════ */
+.split-layout {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 28px;
+  align-items: start;
+}
+
+.left-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.right-sidebar {
+  background: rgba(16, 20, 34, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 20px 20px 0 0;
+  overflow: hidden;
+  position: sticky;
+  top: 90px;
+  backdrop-filter: blur(10px);
+}
+
+.sidebar-header {
+  padding: 22px 24px 18px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.sidebar-header h3 {
+  margin: 0 0 4px 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: 0.3px;
+}
+
+.sidebar-header span {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.45);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.top-accounts-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.top-account-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  cursor: pointer;
+  transition:
+    background 0.18s ease,
+    transform 0.18s ease;
+}
+
+.top-account-row:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.top-account-row:last-child {
+  border-bottom: none;
+}
+
+.top-rank {
+  width: 26px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1.5px solid;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+
+.top-thumb {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  object-fit: cover;
+  background: rgba(255, 255, 255, 0.06);
+  flex-shrink: 0;
+}
+
+.top-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.top-title {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #e2e8f0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.top-meta {
+  font-size: 11.5px;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.top-price {
+  font-size: 13px;
+  font-weight: 700;
+  color: #60a5fa;
+  white-space: nowrap;
+}
+
+.top-chevron {
+  width: 16px;
+  height: 16px;
+  color: rgba(255, 255, 255, 0.25);
+  flex-shrink: 0;
+}
+
+/* ════════════════════════════════════════
+   RESPONSIVE
+   ════════════════════════════════════════ */
+@media (max-width: 1100px) {
+  .split-layout {
+    grid-template-columns: 1fr;
+  }
+  .right-sidebar {
+    position: static;
+    border-radius: 16px;
+    max-width: 480px;
+  }
+}
+
+@media (max-width: 768px) {
+  .left-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .left-grid {
+    grid-template-columns: 1fr;
+  }
+}

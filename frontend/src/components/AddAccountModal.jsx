@@ -39,7 +39,6 @@ export default function AddAccountModal({
       setPreview(initialData.image || null);
       setImageFile(null);
     } else {
-      // CRITICAL: Reset form when adding new
       setForm({ ...EMPTY_FORM });
       setPreview(null);
       setImageFile(null);
@@ -67,7 +66,6 @@ export default function AddAccountModal({
     }
 
     setUploading(true);
-    const token = localStorage.getItem("token");
 
     const formData = new FormData();
     if (imageFile) formData.append("image", imageFile);
@@ -90,8 +88,9 @@ export default function AddAccountModal({
     try {
       const res = await fetch(url, {
         method,
-        headers: { Authorization: `Bearer ${token}` },
+        credentials: "include", // <-- cookie sent automatically
         body: formData,
+        // NO headers needed for FormData - browser sets Content-Type with boundary
       });
 
       setUploading(false);

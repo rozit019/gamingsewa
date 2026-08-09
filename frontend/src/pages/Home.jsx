@@ -4,14 +4,58 @@ import GameCard from "../components/GameCard";
 import DetailPanel from "../components/DetailPanel";
 import { useAccounts } from "../hooks/useAccounts";
 
+/* ═══════════════════════════════════════════════════
+   PUT YOUR 3 HERO IMAGES HERE
+   ═══════════════════════════════════════════════════ */
 const tabImages = [
-  "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=700&h=450&fit=crop",
-  "https://images.unsplash.com/photo-1538481199705-c710c4e965fc?w=700&h=450&fit=crop",
-  "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=700&h=450&fit=crop",
+  "ml.webp", // ← Image 1
+  "2.jpeg", // ← Image 2
+  "1.jpg", // ← Image 3
 ];
+
+/* ═══════════════════════════════════════════════════
+   PUT YOUR 3 GAME ICON IMAGES HERE
+   ═══════════════════════════════════════════════════ */
+const gameIcons = [
+  { name: "Mobile Legends", src: "/m.webp" },
+  { name: "eFootball", src: "/e.webp" },
+  { name: "Clash of Clans", src: "/coc.webp" },
+];
+
 const states = ["back", "middle", "front"];
 
-/* ─── Compact row for the Top Accounts sidebar ─── */
+/* ═══════════════════════════════════════════════════
+   SCROLL REVEAL HOOK
+   ═══════════════════════════════════════════════════ */
+function useScrollReveal({
+  threshold = 0.12,
+  rootMargin = "0px 0px -40px 0px",
+} = {}) {
+  const ref = useRef(null);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.unobserve(el);
+        }
+      },
+      { threshold, rootMargin },
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [threshold, rootMargin]);
+
+  return { ref, isVisible };
+}
+
+/* ═══════════════════════════════════════════════════
+   TOP ACCOUNT ROW (right sidebar)
+   ═══════════════════════════════════════════════════ */
 function TopAccountRow({ data, index, onHover, onLeave }) {
   const rankColor =
     index === 0
@@ -56,9 +100,12 @@ function TopAccountRow({ data, index, onHover, onLeave }) {
   );
 }
 
-/* ─── Split section: left = 6 recent, right = top by value ─── */
+/* ═══════════════════════════════════════════════════
+   SPLIT SECTION — eFootball
+   ═══════════════════════════════════════════════════ */
 function SplitGameSection({ gameKey, title, subtitle, logoSrc }) {
   const { accounts } = useAccounts(gameKey, 24);
+  const { ref, isVisible } = useScrollReveal();
 
   const recentAccounts = accounts.slice(0, 6);
   const topAccounts = [...accounts]
@@ -83,18 +130,14 @@ function SplitGameSection({ gameKey, title, subtitle, logoSrc }) {
       ph = 420,
       gap = 20;
 
-    // Position relative to the section container
     let left = cardRect.left - sectionRect.left + cardRect.width + gap;
     let top = cardRect.top - sectionRect.top + cardRect.height / 2 - ph / 2;
     let isLeft = false;
 
-    // Flip to left side if it overflows section right edge
     if (left + pw > sectionRect.width - gap) {
       left = cardRect.left - sectionRect.left - pw - gap;
       isLeft = true;
     }
-
-    // Clamp top within section bounds
     if (top < gap) top = gap;
     if (top + ph > sectionRect.height - gap) {
       top = sectionRect.height - ph - gap;
@@ -109,7 +152,11 @@ function SplitGameSection({ gameKey, title, subtitle, logoSrc }) {
   };
 
   return (
-    <section className="game-section split-section" id={gameKey}>
+    <section
+      ref={ref}
+      className={`game-section split-section reveal ${isVisible ? "visible" : ""}`}
+      id={gameKey}
+    >
       <div className="section-header">
         <div className="section-title-group">
           <h2>
@@ -170,9 +217,13 @@ function SplitGameSection({ gameKey, title, subtitle, logoSrc }) {
   );
 }
 
-/* ─── Regular section for other games ─── */
+/* ═══════════════════════════════════════════════════
+   REGULAR SECTION — Mobile Legends / COC
+   ═══════════════════════════════════════════════════ */
 function GameSection({ gameKey, title, subtitle, logoSrc, limit = 3 }) {
   const { accounts } = useAccounts(gameKey, limit);
+  const { ref, isVisible } = useScrollReveal();
+
   const [activeCard, setActiveCard] = useState(null);
   const [panelStyle, setPanelStyle] = useState({});
   const [panelLeftSide, setPanelLeftSide] = useState(false);
@@ -191,18 +242,14 @@ function GameSection({ gameKey, title, subtitle, logoSrc, limit = 3 }) {
       ph = 420,
       gap = 20;
 
-    // Position relative to .game-section so it scrolls with the page
     let left = cardRect.left - sectionRect.left + cardRect.width + gap;
     let top = cardRect.top - sectionRect.top + cardRect.height / 2 - ph / 2;
     let isLeft = false;
 
-    // Flip to left side if it would overflow the section's right edge
     if (left + pw > sectionRect.width - gap) {
       left = cardRect.left - sectionRect.left - pw - gap;
       isLeft = true;
     }
-
-    // Clamp vertical position so it stays inside the section
     if (top < gap) top = gap;
     if (top + ph > sectionRect.height - gap) {
       top = sectionRect.height - ph - gap;
@@ -217,7 +264,11 @@ function GameSection({ gameKey, title, subtitle, logoSrc, limit = 3 }) {
   };
 
   return (
-    <section className="game-section" id={gameKey}>
+    <section
+      ref={ref}
+      className={`game-section reveal ${isVisible ? "visible" : ""}`}
+      id={gameKey}
+    >
       <div className="section-header">
         <div className="section-title-group">
           <h2>
@@ -256,7 +307,9 @@ function GameSection({ gameKey, title, subtitle, logoSrc, limit = 3 }) {
   );
 }
 
-/* ─── Home Page ─── */
+/* ═══════════════════════════════════════════════════
+   HOME PAGE
+   ═══════════════════════════════════════════════════ */
 export default function Home() {
   const [rotation, setRotation] = useState([0, 1, 2]);
   const [isPaused, setIsPaused] = useState(false);
@@ -281,26 +334,23 @@ export default function Home() {
     return () => clearInterval(iv);
   }, [isPaused, rotateNext]);
 
+  const heroReveal = useScrollReveal({ threshold: 0.05 });
+
   return (
     <>
-      <section className="hero" id="home">
+      <section
+        ref={heroReveal.ref}
+        className={`hero reveal ${heroReveal.isVisible ? "visible" : ""}`}
+        id="home"
+      >
         <div className="hero-inner">
-          <div
-            className="tab-stack"
-            onMouseEnter={() => setIsPaused(true)}
-            onMouseLeave={() => setIsPaused(false)}
-          >
+          {/* ═══════ HERO TABS — NO HOVER SWAP ═══════ */}
+          <div className="tab-stack">
             {tabImages.map((src, i) => (
               <div
                 key={i}
                 className="tab"
                 data-state={states[rotation.indexOf(i)]}
-                onMouseEnter={() => {
-                  setIsPaused(true);
-                  bringToFront(i);
-                }}
-                onMouseLeave={() => setIsPaused(false)}
-                onClick={() => bringToFront(i)}
               >
                 <img src={src} alt={`Gaming Account ${i + 1}`} />
               </div>
@@ -315,11 +365,6 @@ export default function Home() {
                     bringToFront(i);
                     setTimeout(() => setIsPaused(false), 4000);
                   }}
-                  onMouseEnter={() => {
-                    setIsPaused(true);
-                    bringToFront(i);
-                  }}
-                  onMouseLeave={() => setIsPaused(false)}
                 />
               ))}
             </div>
@@ -353,37 +398,63 @@ export default function Home() {
                 <span className="stat-label">Delivery</span>
               </div>
             </div>
+
             <div className="icons-row">
-              <div
-                className="icon-box"
-                data-game="Mobile Legends"
-                title="Mobile Legends"
-              >
-                <svg viewBox="0 0 24 24">
-                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-                </svg>
-              </div>
-              <div className="icon-box" data-game="eFootball" title="eFootball">
-                <svg viewBox="0 0 24 24">
-                  <circle cx="12" cy="12" r="10" />
-                  <path d="M12 2v20M2 12h20M4.93 4.93l14.14 14.14M19.07 4.93L4.93 19.07" />
-                </svg>
-              </div>
-              <div
-                className="icon-box"
-                data-game="Clash of Clans"
-                title="Clash of Clans"
-              >
-                <svg viewBox="0 0 24 24">
-                  <path d="M12 2L4 7v10l8 5 8-5V7l-8-5z" />
-                  <path d="M12 22V12" />
-                  <path d="M12 12L4 7M12 12l8-5" />
-                </svg>
-              </div>
+              {gameIcons.map((game) => (
+                <div
+                  key={game.name}
+                  className="icon-box"
+                  data-game={game.name}
+                  title={game.name}
+                  style={{
+                    width: "64px",
+                    height: "64px",
+                    overflow: "hidden",
+                    borderRadius: "12px",
+                    border: "1px solid rgba(255,255,255,0.1)",
+                    cursor: "pointer",
+                    transition: "transform 0.2s ease, border-color 0.2s ease",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = "scale(1.08)";
+                    e.currentTarget.style.borderColor = "rgba(255,255,255,0.3)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = "scale(1)";
+                    e.currentTarget.style.borderColor = "rgba(255,255,255,0.1)";
+                  }}
+                >
+                  <img
+                    src={game.src}
+                    alt={game.name}
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "cover",
+                      display: "block",
+                    }}
+                  />
+                </div>
+              ))}
             </div>
-            <div className="cta-row">
+
+            <div
+              className="cta-row"
+              style={{
+                display: "flex",
+                gap: "12px",
+                alignItems: "center",
+              }}
+            >
               <button
                 className="btn-primary"
+                style={{
+                  flex: "1",
+                  maxWidth: "160px",
+                  padding: "10px 20px",
+                  fontSize: "0.9rem",
+                  fontWeight: 600,
+                }}
                 onClick={() =>
                   document
                     .getElementById("efootball")
@@ -392,7 +463,18 @@ export default function Home() {
               >
                 Let's Explore
               </button>
-              <button className="btn-ghost">Sell Ids</button>
+              <button
+                className="btn-ghost"
+                style={{
+                  flex: "1",
+                  maxWidth: "160px",
+                  padding: "10px 20px",
+                  fontSize: "0.9rem",
+                  fontWeight: 600,
+                }}
+              >
+                Sell Ids
+              </button>
             </div>
           </div>
         </div>

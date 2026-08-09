@@ -94,38 +94,47 @@
 /* Logo */
 .glass-logo {
   display: flex;
-  align-items: baseline;
-  gap: 6px;
+  align-items: center;
   text-decoration: none;
+  flex-shrink: 0;
+  height: 90px;
+}
+
+.logo-image {
+  height: 100%;
+  width: auto;
+  max-width: 220px;
+  object-fit: contain;
+  filter: brightness(0.95);
+  transition: filter 0.2s ease;
+}
+
+.glass-logo:hover .logo-image {
+  filter: brightness(1.05);
+}
+
+/* Fallback text if image fails to load */
+.glass-logo.fallback-text {
   font-size: 1.15rem;
   font-weight: 800;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   line-height: 1;
-  flex-shrink: 0;
+  color: #f8fafc;
 }
 
-.logo-glass-gaming {
-  color: #f8fafc;
+.glass-logo.fallback-text::before {
+  content: "GAMING";
   font-weight: 600;
   letter-spacing: 0.08em;
+  margin-right: 6px;
 }
 
-.logo-glass-sewa {
-  color: #f8fafc;
+.glass-logo.fallback-text::after {
+  content: "SEWA";
   font-weight: 800;
   position: relative;
-}
-
-.logo-glass-sewa::after {
-  content: "";
-  position: absolute;
-  right: -7px;
-  top: 2px;
-  width: 4px;
-  height: 4px;
-  background: #60a5fa;
-  border-radius: 50%;
+  padding-right: 7px;
 }
 
 /* Links */
@@ -158,10 +167,6 @@
 .glass-links a:hover {
   color: #fff;
   background: rgba(255, 255, 255, 0.06);
-}
-
-.glass-links a:hover {
-  color: #fff;
 }
 
 /* Active page indicator */
@@ -415,6 +420,9 @@
     display: flex;
   }
   .glass-logo {
-    font-size: 1rem;
+    height: 38px;
+  }
+  .logo-image {
+    max-width: 170px;
   }
 }

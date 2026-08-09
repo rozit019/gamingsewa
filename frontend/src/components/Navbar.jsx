@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useLocation, Link } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import LoginModal from "./LoginModal";
+import RegisterModal from "./RegisterModal";
 import AddAccountModal from "./AddAccountModal";
 
 const NAV_ICONS = {
@@ -15,6 +16,7 @@ export default function Navbar({
 }) {
   const [scrolled, setScrolled] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
+  const [showRegister, setShowRegister] = useState(false);
   const [showAdd, setShowAdd] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const { user, isAdmin, logout } = useAuth();
@@ -35,6 +37,16 @@ export default function Navbar({
   }, []);
 
   const topOffset = announcementVisible ? 36 : 0;
+
+  const openLogin = () => {
+    setShowRegister(false);
+    setShowLogin(true);
+  };
+
+  const openRegister = () => {
+    setShowLogin(false);
+    setShowRegister(true);
+  };
 
   return (
     <>
@@ -65,8 +77,15 @@ export default function Navbar({
         <div className="glass-inner">
           {/* Logo */}
           <Link to="/" className="glass-logo">
-            <span className="logo-glass-gaming">GAMING</span>
-            <span className="logo-glass-sewa">SEWA</span>
+            <img
+              src="/k.png"
+              alt="Gaming Sewa"
+              className="logo-image"
+              onError={(e) => {
+                e.target.style.display = "none";
+                e.target.parentElement.classList.add("fallback-text");
+              }}
+            />
           </Link>
 
           {/* Desktop Links */}
@@ -107,11 +126,6 @@ export default function Navbar({
                 Mobile Legends
               </Link>
             </li>
-            <li>
-              <Link to="/clash-of-clans" onClick={() => setMobileOpen(false)}>
-                Account
-              </Link>
-            </li>
           </ul>
 
           {/* Right Side */}
@@ -132,12 +146,23 @@ export default function Navbar({
               <input type="text" placeholder="Search accounts..." />
             </div>
 
-            {isAdmin ? (
+            {user ? (
               <>
-                <span className="glass-admin">Admin</span>
-                <Link to="/admin" className="glass-btn glass-btn-primary">
-                  Dashboard
-                </Link>
+                {isAdmin ? (
+                  <>
+                    <span className="glass-admin">Admin</span>
+                    <Link to="/admin" className="glass-btn glass-btn-primary">
+                      Dashboard
+                    </Link>
+                  </>
+                ) : (
+                  <>
+                    <span className="glass-user">{user.username}</span>
+                    <Link to="/profile" className="glass-btn glass-btn-ghost">
+                      Profile
+                    </Link>
+                  </>
+                )}
                 <button className="glass-btn glass-btn-ghost" onClick={logout}>
                   Logout
                 </button>
@@ -146,11 +171,14 @@ export default function Navbar({
               <>
                 <button
                   className="glass-btn glass-btn-ghost"
-                  onClick={() => setShowLogin(true)}
+                  onClick={openLogin}
                 >
                   Login
                 </button>
-                <button className="glass-btn glass-btn-primary">
+                <button
+                  className="glass-btn glass-btn-primary"
+                  onClick={openRegister}
+                >
                   Register
                 </button>
               </>
@@ -196,7 +224,18 @@ export default function Navbar({
         />
       )}
 
-      {showLogin && <LoginModal onClose={() => setShowLogin(false)} />}
+      {showLogin && (
+        <LoginModal
+          onClose={() => setShowLogin(false)}
+          onSwitchToRegister={openRegister}
+        />
+      )}
+      {showRegister && (
+        <RegisterModal
+          onClose={() => setShowRegister(false)}
+          onSwitchToLogin={openLogin}
+        />
+      )}
       {showAdd && (
         <AddAccountModal
           onClose={() => setShowAdd(false)}
