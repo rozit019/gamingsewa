@@ -12,7 +12,7 @@ import Home from "./pages/Home";
 import Efootball from "./pages/Efootball";
 import AdminLayout from "./pages/admin/AdminLayout";
 import AdminEfootball from "./pages/admin/AdminEfootball";
-import Profile from "./pages/profile";
+import Profile from "./pages/Profile";
 import FloatingHelp from "./components/FloatingHelp";
 import { HelmetProvider } from "react-helmet-async";
 function App() {
