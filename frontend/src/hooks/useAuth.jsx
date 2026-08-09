@@ -1,7 +1,7 @@
 import { createContext, useContext, useState, useEffect } from "react";
+import { API_URL } from "../config/api";
 
 const AuthContext = createContext(null);
-const API_URL = "http://localhost:5000";
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
@@ -14,7 +14,7 @@ export function AuthProvider({ children }) {
   const fetchUser = async () => {
     try {
       const res = await fetch(`${API_URL}/api/auth/me`, {
-        credentials: "include", // <-- sends the httpOnly cookie
+        credentials: "include",
       });
       if (res.ok) {
         const data = await res.json();
@@ -35,7 +35,7 @@ export function AuthProvider({ children }) {
       const res = await fetch(`${API_URL}/api/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        credentials: "include", // <-- receive the cookie
+        credentials: "include",
         body: JSON.stringify({ username, password }),
       });
       const data = await res.json();
@@ -54,7 +54,7 @@ export function AuthProvider({ children }) {
       const res = await fetch(`${API_URL}/api/auth/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        credentials: "include", // <-- receive the cookie
+        credentials: "include",
         body: JSON.stringify({ username, email, password }),
       });
       const data = await res.json();
@@ -72,7 +72,7 @@ export function AuthProvider({ children }) {
     try {
       await fetch(`${API_URL}/api/auth/logout`, {
         method: "POST",
-        credentials: "include", // <-- tells backend to clear cookie
+        credentials: "include",
       });
     } catch (err) {
       console.error(err);
