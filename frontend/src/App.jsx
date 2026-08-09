@@ -14,14 +14,16 @@ import AdminLayout from "./pages/admin/AdminLayout";
 import AdminEfootball from "./pages/admin/AdminEfootball";
 import Profile from "./pages/profile";
 import FloatingHelp from "./components/FloatingHelp";
-
+import { HelmetProvider } from "react-helmet-async";
 function App() {
   return (
-    <AuthProvider>
-      <BrowserRouter>
-        <AppContent />
-      </BrowserRouter>
-    </AuthProvider>
+    <HelmetProvider>
+      <AuthProvider>
+        <BrowserRouter>
+          <AppContent />
+        </BrowserRouter>
+      </AuthProvider>
+    </HelmetProvider>
   );
 }
 
