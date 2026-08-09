@@ -71,9 +71,9 @@ export default function Efootball() {
           </div>
           <a href="/" className="view-all">
             ← Back to Home
-            <svg viewBox="0 0 24 24">
+            {/* <svg viewBox="0 0 24 24">
               <path d="M5 12h14M12 5l7 7-7 7" />
-            </svg>
+            </svg> */}
           </a>
         </div>
         <div className="cards-grid">

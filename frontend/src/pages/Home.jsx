@@ -1,9 +1,8 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import Navbar from "../components/Navbar";
 import GameCard from "../components/GameCard";
 import DetailPanel from "../components/DetailPanel";
 import { useAccounts } from "../hooks/useAccounts";
-import { useRef } from "react";
 
 const tabImages = [
   "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=700&h=450&fit=crop",
@@ -12,6 +11,166 @@ const tabImages = [
 ];
 const states = ["back", "middle", "front"];
 
+/* ─── Compact row for the Top Accounts sidebar ─── */
+function TopAccountRow({ data, index, onHover, onLeave }) {
+  const rankColor =
+    index === 0
+      ? "#fbbf24"
+      : index === 1
+        ? "#9ca3af"
+        : index === 2
+          ? "#cd7f32"
+          : "rgba(255,255,255,0.4)";
+
+  return (
+    <div
+      className="top-account-row"
+      onMouseEnter={(e) => onHover(data, e.currentTarget)}
+      onMouseLeave={onLeave}
+    >
+      <div
+        className="top-rank"
+        style={{ color: rankColor, borderColor: rankColor }}
+      >
+        {index + 1}
+      </div>
+      <img
+        src={data.image || data.thumbnail || "/placeholder.jpg"}
+        alt={data.title}
+        className="top-thumb"
+      />
+      <div className="top-info">
+        <span className="top-title">{data.title}</span>
+        <span className="top-meta">{data.subtitle || `Rs. ${data.price}`}</span>
+      </div>
+      <span className="top-price">Rs. {data.price}</span>
+      <svg
+        className="top-chevron"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+      >
+        <path d="M9 18l6-6-6-6" />
+      </svg>
+    </div>
+  );
+}
+
+/* ─── Split section: left = 6 recent, right = top by value ─── */
+function SplitGameSection({ gameKey, title, subtitle, logoSrc }) {
+  const { accounts } = useAccounts(gameKey, 24);
+
+  const recentAccounts = accounts.slice(0, 6);
+  const topAccounts = [...accounts]
+    .sort((a, b) => (b.price || 0) - (a.price || 0))
+    .slice(0, 5);
+
+  const [activeCard, setActiveCard] = useState(null);
+  const [panelStyle, setPanelStyle] = useState({});
+  const [panelLeftSide, setPanelLeftSide] = useState(false);
+  const hideTimeout = useRef(null);
+
+  const handleEnter = (data, cardEl) => {
+    clearTimeout(hideTimeout.current);
+    setActiveCard(data);
+
+    const sectionEl = cardEl.closest(".game-section");
+    if (!sectionEl) return;
+
+    const sectionRect = sectionEl.getBoundingClientRect();
+    const cardRect = cardEl.getBoundingClientRect();
+    const pw = 340,
+      ph = 420,
+      gap = 20;
+
+    // Position relative to the section container
+    let left = cardRect.left - sectionRect.left + cardRect.width + gap;
+    let top = cardRect.top - sectionRect.top + cardRect.height / 2 - ph / 2;
+    let isLeft = false;
+
+    // Flip to left side if it overflows section right edge
+    if (left + pw > sectionRect.width - gap) {
+      left = cardRect.left - sectionRect.left - pw - gap;
+      isLeft = true;
+    }
+
+    // Clamp top within section bounds
+    if (top < gap) top = gap;
+    if (top + ph > sectionRect.height - gap) {
+      top = sectionRect.height - ph - gap;
+    }
+
+    setPanelLeftSide(isLeft);
+    setPanelStyle({ left: `${left}px`, top: `${top}px` });
+  };
+
+  const handleLeave = () => {
+    hideTimeout.current = setTimeout(() => setActiveCard(null), 80);
+  };
+
+  return (
+    <section className="game-section split-section" id={gameKey}>
+      <div className="section-header">
+        <div className="section-title-group">
+          <h2>
+            <span className="game-icon">
+              <img src={logoSrc} alt={title} className="game-logo-img" />
+            </span>
+            {title}
+          </h2>
+          <p>{subtitle}</p>
+        </div>
+        <a href={`/${gameKey}`} className="view-all">
+          View All
+          <svg viewBox="0 0 24 24">
+            <path d="M5 12h14M12 5l7 7-7 7" />
+          </svg>
+        </a>
+      </div>
+
+      <div className="split-layout">
+        <div className="left-grid">
+          {recentAccounts.map((card) => (
+            <GameCard
+              key={card.id}
+              data={card}
+              onHover={handleEnter}
+              onLeave={handleLeave}
+            />
+          ))}
+        </div>
+
+        <aside className="right-sidebar">
+          <div className="sidebar-header">
+            <h3>Top Accounts</h3>
+            <span>Highest Value</span>
+          </div>
+          <div className="top-accounts-list">
+            {topAccounts.map((card, idx) => (
+              <TopAccountRow
+                key={card.id}
+                data={card}
+                index={idx}
+                onHover={handleEnter}
+                onLeave={handleLeave}
+              />
+            ))}
+          </div>
+        </aside>
+      </div>
+
+      <DetailPanel
+        activeCard={activeCard}
+        panelStyle={panelStyle}
+        panelLeftSide={panelLeftSide}
+        onEnter={() => clearTimeout(hideTimeout.current)}
+        onLeave={() => setActiveCard(null)}
+      />
+    </section>
+  );
+}
+
+/* ─── Regular section for other games ─── */
 function GameSection({ gameKey, title, subtitle, logoSrc, limit = 3 }) {
   const { accounts } = useAccounts(gameKey, limit);
   const [activeCard, setActiveCard] = useState(null);
@@ -22,23 +181,37 @@ function GameSection({ gameKey, title, subtitle, logoSrc, limit = 3 }) {
   const handleEnter = (data, cardEl) => {
     clearTimeout(hideTimeout.current);
     setActiveCard(data);
-    const rect = cardEl.getBoundingClientRect();
+
+    const sectionEl = cardEl.closest(".game-section");
+    if (!sectionEl) return;
+
+    const sectionRect = sectionEl.getBoundingClientRect();
+    const cardRect = cardEl.getBoundingClientRect();
     const pw = 340,
       ph = 420,
       gap = 20;
-    let left = rect.right + gap;
-    let top = rect.top + rect.height / 2 - ph / 2;
+
+    // Position relative to .game-section so it scrolls with the page
+    let left = cardRect.left - sectionRect.left + cardRect.width + gap;
+    let top = cardRect.top - sectionRect.top + cardRect.height / 2 - ph / 2;
     let isLeft = false;
-    if (left + pw > window.innerWidth - gap) {
-      left = rect.left - pw - gap;
+
+    // Flip to left side if it would overflow the section's right edge
+    if (left + pw > sectionRect.width - gap) {
+      left = cardRect.left - sectionRect.left - pw - gap;
       isLeft = true;
     }
+
+    // Clamp vertical position so it stays inside the section
     if (top < gap) top = gap;
-    if (top + ph > window.innerHeight - gap)
-      top = window.innerHeight - ph - gap;
+    if (top + ph > sectionRect.height - gap) {
+      top = sectionRect.height - ph - gap;
+    }
+
     setPanelLeftSide(isLeft);
     setPanelStyle({ left: `${left}px`, top: `${top}px` });
   };
+
   const handleLeave = () => {
     hideTimeout.current = setTimeout(() => setActiveCard(null), 80);
   };
@@ -83,6 +256,7 @@ function GameSection({ gameKey, title, subtitle, logoSrc, limit = 3 }) {
   );
 }
 
+/* ─── Home Page ─── */
 export default function Home() {
   const [rotation, setRotation] = useState([0, 1, 2]);
   const [isPaused, setIsPaused] = useState(false);
@@ -224,13 +398,13 @@ export default function Home() {
         </div>
       </section>
 
-      <GameSection
+      <SplitGameSection
         gameKey="efootball"
         title="eFootball Accounts"
         subtitle="Premium squads with legendary players and high GP balance"
         logoSrc="/e.webp"
-        limit={3}
       />
+
       <GameSection
         gameKey="mobilelegends"
         title="Mobile Legends Accounts"

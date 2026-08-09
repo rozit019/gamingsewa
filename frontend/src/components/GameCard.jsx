@@ -52,7 +52,9 @@ export default function GameCard({ data, onHover, onLeave }) {
         </div>
         <div className="id-card-footer">
           <div className="id-price">Rs. {price}</div>
-          <button className="btn-buy">Buy Now</button>
+          <button className="btn-buy" onClick={(e) => e.stopPropagation()}>
+            Buy Now
+          </button>
         </div>
       </div>
     </div>

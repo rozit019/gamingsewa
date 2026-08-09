@@ -955,3 +955,206 @@
 .content > *:nth-child(7) {
   animation-delay: 1.1s;
 }
+/* ════════════════════════════════════════
+   SPLIT LAYOUT – eFootball Section
+   ════════════════════════════════════════ */
+
+.split-layout {
+  display: grid;
+  grid-template-columns: 1fr 380px; /* left grid | right sidebar */
+  gap: 28px;
+  align-items: start;
+}
+
+/* ── Left: 6 recent cards ── */
+.left-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+/* ── Right: Top Accounts sidebar ── */
+.right-sidebar {
+  background: rgba(16, 20, 34, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 20px 20px 0 0; /* rounded top corners like your wireframe */
+  overflow: hidden;
+  position: sticky;
+  top: 90px;
+  backdrop-filter: blur(10px);
+}
+
+.sidebar-header {
+  padding: 22px 24px 18px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.sidebar-header h3 {
+  margin: 0 0 4px 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: 0.3px;
+}
+
+.sidebar-header span {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.45);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.top-accounts-list {
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Individual top-account row ── */
+.top-account-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  cursor: pointer;
+  transition:
+    background 0.18s ease,
+    transform 0.18s ease;
+}
+
+.top-account-row:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.top-account-row:last-child {
+  border-bottom: none;
+}
+
+/* Rank badge */
+.top-rank {
+  width: 26px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1.5px solid;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+
+/* Thumbnail */
+.top-thumb {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  object-fit: cover;
+  background: rgba(255, 255, 255, 0.06);
+  flex-shrink: 0;
+}
+
+/* Text info */
+.top-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0; /* allow truncation */
+}
+
+.top-title {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #e2e8f0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.top-meta {
+  font-size: 11.5px;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+/* Price */
+.top-price {
+  font-size: 13px;
+  font-weight: 700;
+  color: #60a5fa; /* blue-400 */
+  white-space: nowrap;
+}
+
+/* Chevron */
+.top-chevron {
+  width: 16px;
+  height: 16px;
+  color: rgba(255, 255, 255, 0.25);
+  flex-shrink: 0;
+}
+
+/* ════════════════════════════════════════
+   RESPONSIVE
+   ════════════════════════════════════════ */
+@media (max-width: 1100px) {
+  .split-layout {
+    grid-template-columns: 1fr;
+  }
+  .right-sidebar {
+    position: static;
+    border-radius: 16px;
+    max-width: 480px;
+  }
+}
+
+@media (max-width: 768px) {
+  .left-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .left-grid {
+    grid-template-columns: 1fr;
+  }
+}
+/* Anchor the panel inside the section so it scrolls with the page */
+.game-section {
+  position: relative;
+}
+
+/* Panel is absolute within the section, NOT fixed to viewport */
+.detail-panel {
+  position: absolute;
+  width: 340px;
+  /* keep your existing background, border, border-radius, padding, etc. */
+}
+
+/* Prevent parent containers from clipping the panel */
+.split-layout,
+.left-grid,
+.right-sidebar,
+.cards-grid {
+  overflow: visible;
+}
+/* The section MUST be the positioning anchor */
+.game-section {
+  position: relative !important;
+}
+
+/* The panel MUST break out of document flow */
+.detail-panel {
+  position: absolute !important;
+  width: 340px;
+  z-index: 100;
+  /* keep your existing background / border-radius / padding / shadow */
+}
+
+/* Prevent any parent from clipping the panel */
+.split-layout,
+.left-grid,
+.right-sidebar,
+.cards-grid,
+.game-section {
+  overflow: visible !important;
+}
