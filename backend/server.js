@@ -11,13 +11,26 @@ connectDB();
 
 const app = express();
 
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://khelio-nu.vercel.app",
+  // add your custom domain later:
+  // 'https://khelio.com.np',
+];
+
 app.use(
   cors({
-    origin: "http://localhost:5173",
-    credentials: true,
+    origin: function (origin, callback) {
+      // allow requests with no origin (like mobile apps or curl)
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+      return callback(new Error("Not allowed by CORS"));
+    },
+    credentials: true, // REQUIRED for cookies/auth to work
   }),
 );
-
 app.use(cookieParser()); // <-- ADD THIS LINE
 app.use(express.json());
 
