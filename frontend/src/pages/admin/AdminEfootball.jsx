@@ -1,16 +1,19 @@
 import { useState, useEffect } from "react";
+import { API_URL } from "../../config/api"; // adjust path if needed
 import AddAccountModal from "../../components/AddAccountModal";
 
 export default function AdminEfootball() {
   const [accounts, setAccounts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [modalMode, setModalMode] = useState(null); // 'add' | 'edit'
+  const [modalMode, setModalMode] = useState(null);
   const [editData, setEditData] = useState(null);
 
   const fetchAccounts = async () => {
     setLoading(true);
     try {
-      const res = await fetch("http://localhost:5000/api/efootball");
+      const res = await fetch(`${API_URL}/api/efootball`, {
+        credentials: "include", // send cookie
+      });
       const data = await res.json();
       setAccounts(data);
     } catch (err) {
@@ -26,15 +29,19 @@ export default function AdminEfootball() {
 
   const handleDelete = async (id) => {
     if (!confirm("Delete this account permanently?")) return;
-    const token = localStorage.getItem("token");
-    const res = await fetch(`http://localhost:5000/api/efootball/${id}`, {
-      method: "DELETE",
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    if (res.ok) {
-      fetchAccounts();
-    } else {
-      alert("Delete failed");
+    try {
+      const res = await fetch(`${API_URL}/api/efootball/${id}`, {
+        method: "DELETE",
+        credentials: "include", // send cookie — NO localStorage token
+      });
+      if (res.ok) {
+        fetchAccounts();
+      } else {
+        const err = await res.json();
+        alert(err.message || "Delete failed");
+      }
+    } catch (err) {
+      alert("Network error");
     }
   };
 

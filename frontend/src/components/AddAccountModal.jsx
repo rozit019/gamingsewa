@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { API_URL } from "../config/api"; // adjust path if needed
 
 const EMPTY_FORM = {
   title: "",
@@ -81,16 +82,16 @@ export default function AddAccountModal({
 
     const url =
       mode === "edit"
-        ? `http://localhost:5000/api/efootball/${initialData._id}`
-        : "http://localhost:5000/api/efootball";
+        ? `${API_URL}/api/efootball/${initialData._id}`
+        : `${API_URL}/api/efootball`;
     const method = mode === "edit" ? "PUT" : "POST";
 
     try {
       const res = await fetch(url, {
         method,
-        credentials: "include", // <-- cookie sent automatically
+        credentials: "include", // cookie sent automatically
         body: formData,
-        // NO headers needed for FormData - browser sets Content-Type with boundary
+        // DO NOT set Content-Type manually — browser sets it with boundary for FormData
       });
 
       setUploading(false);
