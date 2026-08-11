@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import EditProfileModal from "../components/EditProfileModal";
 
@@ -63,7 +63,6 @@ export default function Profile() {
   const [showEdit, setShowEdit] = useState(false);
   const [activeTab, setActiveTab] = useState("bought");
 
-  // WAIT for auth check to finish before deciding to redirect
   if (loading) {
     return (
       <div className="profile-loading">
@@ -73,7 +72,6 @@ export default function Profile() {
     );
   }
 
-  // Only redirect AFTER we know for sure user is not logged in
   if (!user) {
     navigate("/");
     return null;
@@ -92,89 +90,97 @@ export default function Profile() {
   return (
     <div className="profile-page">
       <div className="profile-wrapper">
-        {/* LEFT: User Card */}
-        <aside className="user-card">
-          <div className="avatar">{initials}</div>
-          <div className="user-name">{user?.username}</div>
-          <div className="user-handle">@{user?.username}</div>
+        <div className="profile-top">
+          {/* LEFT: User Card */}
+          <aside className="user-card">
+            <div className="avatar">{initials}</div>
+            <div className="user-name">{user?.username}</div>
+            <div className="user-handle">@{user?.username}</div>
 
-          <div className="user-meta-list">
-            <div className="user-meta-item">
-              <span>Email</span>
-              <span>{user?.email || "—"}</span>
+            <div className="user-meta-list">
+              <div className="user-meta-item">
+                <span>Email</span>
+                <span>{user?.email || "—"}</span>
+              </div>
+              <div className="user-meta-item">
+                <span>Role</span>
+                <span style={{ textTransform: "capitalize" }}>
+                  {user?.role}
+                </span>
+              </div>
+              <div className="user-meta-item">
+                <span>Member Since</span>
+                <span>{memberSince}</span>
+              </div>
             </div>
-            <div className="user-meta-item">
-              <span>Role</span>
-              <span style={{ textTransform: "capitalize" }}>{user?.role}</span>
-            </div>
-            <div className="user-meta-item">
-              <span>Member Since</span>
-              <span>{memberSince}</span>
-            </div>
-          </div>
 
-          <div className="user-stats">
-            <div className="user-stat">
-              <span className="user-stat-num">0</span>
-              <span className="user-stat-label">Bought</span>
+            <div className="user-stats">
+              <div className="user-stat">
+                <span className="user-stat-num">0</span>
+                <span className="user-stat-label">Bought</span>
+              </div>
+              <div className="user-stat">
+                <span className="user-stat-num">0</span>
+                <span className="user-stat-label">Sold</span>
+              </div>
+              <div className="user-stat">
+                <span className="user-stat-num">—</span>
+                <span className="user-stat-label">Rating</span>
+              </div>
             </div>
-            <div className="user-stat">
-              <span className="user-stat-num">0</span>
-              <span className="user-stat-label">Sold</span>
-            </div>
-            <div className="user-stat">
-              <span className="user-stat-num">—</span>
-              <span className="user-stat-label">Rating</span>
-            </div>
-          </div>
 
-          <button className="btn-edit" onClick={() => setShowEdit(true)}>
-            Edit Profile
-          </button>
-          <button className="btn-logout" onClick={logout}>
-            Logout
-          </button>
-        </aside>
-
-        {/* RIGHT: History */}
-        <section className="history-panel">
-          <div className="history-tabs">
-            <button
-              className={`history-tab ${activeTab === "bought" ? "active" : ""}`}
-              onClick={() => setActiveTab("bought")}
-            >
-              Purchases
+            <button className="btn-edit" onClick={() => setShowEdit(true)}>
+              Edit Profile
             </button>
-            <button
-              className={`history-tab ${activeTab === "sold" ? "active" : ""}`}
-              onClick={() => setActiveTab("sold")}
-            >
-              Sales
+            <button className="btn-logout" onClick={logout}>
+              Logout
             </button>
-          </div>
+          </aside>
 
-          <div className="history-list">
-            {historyData.length === 0 ? (
-              <div className="empty-state">No {activeTab} items yet</div>
-            ) : (
-              historyData.map((item, i) => (
-                <div className="history-item" key={i}>
-                  <div className="history-thumb">
-                    <img src={item.thumb} alt="" />
+          {/* RIGHT: History */}
+          <section className="history-panel">
+            <div className="history-tabs">
+              <button
+                className={`history-tab ${
+                  activeTab === "bought" ? "active" : ""
+                }`}
+                onClick={() => setActiveTab("bought")}
+              >
+                Purchases
+              </button>
+              <button
+                className={`history-tab ${
+                  activeTab === "sold" ? "active" : ""
+                }`}
+                onClick={() => setActiveTab("sold")}
+              >
+                Sales
+              </button>
+            </div>
+
+            <div className="history-list">
+              {historyData.length === 0 ? (
+                <div className="empty-state">No {activeTab} items yet</div>
+              ) : (
+                historyData.map((item, i) => (
+                  <div className="history-item" key={i}>
+                    <div className="history-thumb">
+                      <img src={item.thumb} alt="" />
+                    </div>
+                    <div className="history-info">
+                      <div className="history-title">{item.title}</div>
+                      <div className="history-meta">{item.meta}</div>
+                    </div>
+                    <div className="history-price">{item.price}</div>
+                    <span className={`history-badge ${item.badgeClass}`}>
+                      {item.badge}
+                    </span>
                   </div>
-                  <div className="history-info">
-                    <div className="history-title">{item.title}</div>
-                    <div className="history-meta">{item.meta}</div>
-                  </div>
-                  <div className="history-price">{item.price}</div>
-                  <span className={`history-badge ${item.badgeClass}`}>
-                    {item.badge}
-                  </span>
-                </div>
-              ))
-            )}
-          </div>
-        </section>
+                ))
+              )}
+            </div>
+          </section>
+        </div>
 
         {/* BOTTOM: Requests */}
         <section className="requests-section">
