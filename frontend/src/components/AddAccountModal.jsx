@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { API_URL } from "../config/api"; // adjust path if needed
+import { API_URL } from "../config/api";
 
 const EMPTY_FORM = {
   title: "",
@@ -7,6 +7,7 @@ const EMPTY_FORM = {
   rarity: "Rare",
   description: "",
   price: "",
+  originalPrice: "", // <-- NEW: fake original price for discount display
   badge: "",
   ptw: 0,
   coins: 0,
@@ -32,6 +33,7 @@ export default function AddAccountModal({
         rarity: initialData.rarity || "Rare",
         description: initialData.description || "",
         price: initialData.price || "",
+        originalPrice: initialData.originalPrice || "", // <-- load existing
         badge: initialData.badge || "",
         ptw: initialData.ptw || 0,
         coins: initialData.coins || 0,
@@ -75,6 +77,7 @@ export default function AddAccountModal({
     formData.append("rarity", form.rarity);
     formData.append("description", form.description);
     formData.append("price", form.price);
+    formData.append("originalPrice", form.originalPrice); // <-- send to backend
     formData.append("badge", form.badge);
     formData.append("ptw", form.ptw);
     formData.append("coins", form.coins);
@@ -89,9 +92,8 @@ export default function AddAccountModal({
     try {
       const res = await fetch(url, {
         method,
-        credentials: "include", // cookie sent automatically
+        credentials: "include",
         body: formData,
-        // DO NOT set Content-Type manually — browser sets it with boundary for FormData
       });
 
       setUploading(false);
@@ -209,15 +211,27 @@ export default function AddAccountModal({
             )}
 
             {field(
-              "Price (NRS)",
-              "Selling price in Rupees. e.g. 8999",
+              "Real Price (NRS)",
+              "Actual selling price. e.g. 4995",
               <input
                 name="price"
                 type="number"
-                placeholder="8999"
+                placeholder="4995"
                 value={form.price}
                 onChange={handleChange}
                 required
+              />,
+            )}
+
+            {field(
+              "Fake Original Price (NRS)",
+              "Higher price to show discount. Leave empty for no discount. e.g. 6999",
+              <input
+                name="originalPrice"
+                type="number"
+                placeholder="6999"
+                value={form.originalPrice}
+                onChange={handleChange}
               />,
             )}
 

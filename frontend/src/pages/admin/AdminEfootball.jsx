@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { API_URL } from "../../config/api"; // adjust path if needed
+import { API_URL } from "../../config/api";
 import AddAccountModal from "../../components/AddAccountModal";
 
 export default function AdminEfootball() {
@@ -12,7 +12,7 @@ export default function AdminEfootball() {
     setLoading(true);
     try {
       const res = await fetch(`${API_URL}/api/efootball`, {
-        credentials: "include", // send cookie
+        credentials: "include",
       });
       const data = await res.json();
       setAccounts(data);
@@ -32,7 +32,7 @@ export default function AdminEfootball() {
     try {
       const res = await fetch(`${API_URL}/api/efootball/${id}`, {
         method: "DELETE",
-        credentials: "include", // send cookie — NO localStorage token
+        credentials: "include",
       });
       if (res.ok) {
         fetchAccounts();
@@ -96,6 +96,7 @@ export default function AdminEfootball() {
                   <th>PTW</th>
                   <th>Coins</th>
                   <th>Price</th>
+                  <th>Original</th>
                   <th>Actions</th>
                 </tr>
               </thead>
@@ -121,6 +122,20 @@ export default function AdminEfootball() {
                     <td>{fmt(acc.ptw)}</td>
                     <td>{fmt(acc.coins)}</td>
                     <td>Rs. {acc.price}</td>
+                    <td>
+                      {acc.originalPrice ? (
+                        <span
+                          style={{
+                            textDecoration: "line-through",
+                            color: "#888",
+                          }}
+                        >
+                          Rs. {acc.originalPrice}
+                        </span>
+                      ) : (
+                        "-"
+                      )}
+                    </td>
                     <td>
                       <div className="table-actions">
                         <button
@@ -161,7 +176,7 @@ export default function AdminEfootball() {
                 ))}
                 {accounts.length === 0 && (
                   <tr>
-                    <td colSpan="8" className="td-empty">
+                    <td colSpan="9" className="td-empty">
                       No accounts found.
                     </td>
                   </tr>
@@ -193,7 +208,21 @@ export default function AdminEfootball() {
                   </span>
                   <span>PTW {fmt(acc.ptw)}</span>
                   <span>Coins {fmt(acc.coins)}</span>
-                  <span className="admin-card-price">Rs. {acc.price}</span>
+                  <span className="admin-card-price">
+                    Rs. {acc.price}
+                    {acc.originalPrice && (
+                      <span
+                        style={{
+                          textDecoration: "line-through",
+                          color: "#888",
+                          marginLeft: 6,
+                          fontSize: "0.85em",
+                        }}
+                      >
+                        Rs. {acc.originalPrice}
+                      </span>
+                    )}
+                  </span>
                 </div>
                 <div className="admin-card-actions">
                   <button

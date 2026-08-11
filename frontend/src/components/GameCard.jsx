@@ -7,7 +7,6 @@ function formatNum(n) {
   return n;
 }
 
-// Your business WhatsApp number
 const BUSINESS_WHATSAPP = "9779841580244";
 
 export default function GameCard({ data, onHover, onLeave }) {
@@ -23,8 +22,17 @@ export default function GameCard({ data, onHover, onLeave }) {
     ptw,
     coins,
     price,
+    originalPrice,
     features,
   } = data;
+
+  // Use backend originalPrice if set, otherwise no discount
+  const hasDiscount = originalPrice && Number(originalPrice) > Number(price);
+  const discountPercent = hasDiscount
+    ? Math.round(
+        ((Number(originalPrice) - Number(price)) / Number(originalPrice)) * 100,
+      )
+    : 0;
 
   const handleBuyNow = (e) => {
     e.stopPropagation();
@@ -52,6 +60,9 @@ export default function GameCard({ data, onHover, onLeave }) {
             {badge}
           </span>
         )}
+        {hasDiscount && (
+          <span className="id-card-discount-badge">-{discountPercent}%</span>
+        )}
         <span className={`id-card-rarity rarity-${rarity.toLowerCase()}`}>
           {rarity}
         </span>
@@ -69,7 +80,12 @@ export default function GameCard({ data, onHover, onLeave }) {
           ))}
         </div>
         <div className="id-card-footer">
-          <div className="id-price">Rs. {price}</div>
+          <div className="id-price-wrap">
+            {hasDiscount && (
+              <div className="id-price-original">Rs. {originalPrice}</div>
+            )}
+            <div className="id-price-discounted">Rs. {price}</div>
+          </div>
           <button className="btn-buy" onClick={handleBuyNow}>
             Buy Now
           </button>

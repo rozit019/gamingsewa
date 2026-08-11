@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { openWhatsApp } from "../utils/whatsapp";
 
-// Your business WhatsApp number
 const BUSINESS_WHATSAPP = "9779841580244";
 
 export default function DetailPanel({
@@ -27,8 +26,16 @@ export default function DetailPanel({
     highestRank,
     rarity,
     price,
+    originalPrice,
     features,
   } = activeCard || {};
+
+  const hasDiscount = originalPrice && Number(originalPrice) > Number(price);
+  const discountPercent = hasDiscount
+    ? Math.round(
+        ((Number(originalPrice) - Number(price)) / Number(originalPrice)) * 100,
+      )
+    : 0;
 
   const badges = activeCard
     ? [
@@ -67,7 +74,6 @@ export default function DetailPanel({
 
   return (
     <>
-      {/* Detail Panel */}
       {activeCard && (
         <div
           className={`detail-panel ${panelLeftSide ? "left-side" : ""} active`}
@@ -138,7 +144,19 @@ export default function DetailPanel({
           </div>
 
           <div className="detail-footer-popup">
-            <div className="detail-price-popup">Rs. {price}</div>
+            <div className="detail-price-wrap">
+              {hasDiscount && (
+                <>
+                  <span className="detail-discount-badge">
+                    -{discountPercent}% OFF
+                  </span>
+                  <div className="detail-price-original">
+                    Rs. {originalPrice}
+                  </div>
+                </>
+              )}
+              <div className="detail-price-discounted">Rs. {price}</div>
+            </div>
             <button className="btn-detail-buy" onClick={handleBuyNow}>
               <svg viewBox="0 0 24 24">
                 <path d="M5 3l14 9-14 9V3z" />
@@ -154,7 +172,6 @@ export default function DetailPanel({
         </div>
       )}
 
-      {/* Lightbox */}
       {lightboxImg && (
         <div className="detail-lightbox" onClick={closeLightbox}>
           <img src={lightboxImg} alt={lightboxTitle} />

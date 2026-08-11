@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useLocation } from "react-router-dom";
 import { openWhatsApp } from "../utils/whatsapp";
 
 const FAQS = [
@@ -20,6 +21,10 @@ export default function FloatingHelp() {
   const [open, setOpen] = useState(false);
   const [showFaq, setShowFaq] = useState(false);
   const [activeQ, setActiveQ] = useState(null);
+  const location = useLocation();
+
+  // Hide on admin pages
+  if (location.pathname.startsWith("/admin")) return null;
 
   const handleWhatsApp = () => {
     const message = encodeURIComponent("Hi Khelio! I need help.");
@@ -31,23 +36,26 @@ export default function FloatingHelp() {
     <>
       {/* ── Floating Menu ── */}
       <div className="fab-container">
-        <div className={`fab-menu ${open ? "open" : ""}`}>
-          <button
-            className="fab-item"
-            onClick={() => {
-              setShowFaq(true);
-              setOpen(false);
-            }}
-          >
-            <span className="fab-icon">❓</span>
-            <span className="fab-label">FAQ</span>
-          </button>
+        {/* Menu only renders when open — no invisible overlay when closed */}
+        {open && (
+          <div className="fab-menu open">
+            <button
+              className="fab-item"
+              onClick={() => {
+                setShowFaq(true);
+                setOpen(false);
+              }}
+            >
+              <span className="fab-icon">❓</span>
+              <span className="fab-label">FAQ</span>
+            </button>
 
-          <button className="fab-item" onClick={handleWhatsApp}>
-            <span className="fab-icon">💬</span>
-            <span className="fab-label">Talk with Admin</span>
-          </button>
-        </div>
+            <button className="fab-item" onClick={handleWhatsApp}>
+              <span className="fab-icon">💬</span>
+              <span className="fab-label">Talk with Admin</span>
+            </button>
+          </div>
+        )}
 
         <button
           className={`fab-button ${open ? "active" : ""}`}

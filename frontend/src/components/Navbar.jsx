@@ -57,8 +57,8 @@ export default function Navbar({
           <div className="announcement-inner">
             <span className="announcement-text">
               <span className="announcement-x"></span>
-              Mobile Legends and coc accounts are coming soon! Stay tuned for
-              updates.
+              Discounted Price on every Account for openening week!ML and COC
+              coming soon!
             </span>
             <button
               className="announcement-close"
