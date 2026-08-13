@@ -6,6 +6,7 @@ import "./styles/Home.css";
 import "./styles/Efootball.css";
 import "./styles/profile.css";
 import "./styles/modal.css";
+import "./styles/Topup.css";
 import App from "./App.jsx";
 
 createRoot(document.getElementById("root")).render(

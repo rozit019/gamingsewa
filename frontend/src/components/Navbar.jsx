@@ -4,10 +4,14 @@ import { useAuth } from "../hooks/useAuth";
 import LoginModal from "./LoginModal";
 import RegisterModal from "./RegisterModal";
 import AddAccountModal from "./AddAccountModal";
+import "../styles/Navbar.css";
+import "../styles/Topup.css";
+import fimage from "../assets/ff.jpg";
 
 const NAV_ICONS = {
   efootball: "/e.webp",
   "mobile-legends": "/m.webp",
+  freefire: "/ff.webp",
 };
 
 export default function Navbar({
@@ -19,6 +23,7 @@ export default function Navbar({
   const [showRegister, setShowRegister] = useState(false);
   const [showAdd, setShowAdd] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [topupOpen, setTopupOpen] = useState(false);
   const { user, isAdmin, logout } = useAuth();
 
   useEffect(() => {
@@ -50,6 +55,11 @@ export default function Navbar({
     setMobileOpen(false);
   };
 
+  const closeMenus = () => {
+    setMobileOpen(false);
+    setTopupOpen(false);
+  };
+
   return (
     <>
       {announcementVisible && (
@@ -72,9 +82,8 @@ export default function Navbar({
       )}
 
       <nav
-        className={`glass-navbar ${scrolled ? "scrolled" : ""} ${
-          announcementVisible ? "with-announcement" : ""
-        }`}
+        className={`glass-navbar ${scrolled ? "scrolled" : ""} ${announcementVisible ? "with-announcement" : ""
+          }`}
         style={{ top: `${topOffset}px` }}
       >
         <div className="glass-inner">
@@ -130,19 +139,70 @@ export default function Navbar({
               </Link>
             </li>
 
+            {/* ── TOP-UP DROPDOWN ── */}
+            <li
+              className="glass-dropdown"
+              onMouseEnter={() => setTopupOpen(true)}
+              onMouseLeave={() => setTopupOpen(false)}
+            >
+              <span
+                className="glass-dropdown-trigger"
+                onClick={() => setTopupOpen((p) => !p)}
+              >
+                Top-up
+                <svg
+                  className={`glass-dropdown-arrow ${topupOpen ? "open" : ""}`}
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <polyline points="6 9 12 15 18 9" />
+                </svg>
+              </span>
+
+              <ul className={`glass-dropdown-menu ${topupOpen ? "open" : ""}`}>
+                <li>
+                  <Link to="/efootball/topup" onClick={closeMenus}>
+                    <img
+                      src={NAV_ICONS.efootball}
+                      alt=""
+                      className="nav-game-icon"
+                      onError={(e) => {
+                        e.target.style.display = "none";
+                      }}
+                    />
+                    eFootball Coins
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/freefire/topup" onClick={closeMenus}>
+                    <img
+                      src={fimage}
+                      alt=""
+                      className="nav-game-icon"
+                      onError={(e) => {
+                        e.target.style.display = "none";
+                      }}
+                    />
+                    Free Fire Diamonds
+                  </Link>
+                </li>
+              </ul>
+            </li>
+
             {/* ── MOBILE AUTH ITEMS ── */}
             <li className="mobile-auth">
               {user ? (
                 <>
                   {isAdmin ? (
                     <>
-                      <span className="glass-admin">Admin</span>
                       <Link
                         to="/admin"
                         className="glass-btn glass-btn-primary"
                         onClick={() => setMobileOpen(false)}
                       >
-                        Dashboard
+                        Admin Panel
                       </Link>
                     </>
                   ) : (
@@ -210,9 +270,11 @@ export default function Navbar({
                 <>
                   {isAdmin ? (
                     <>
-                      <span className="glass-admin">Admin</span>
-                      <Link to="/admin" className="glass-btn glass-btn-primary">
-                        Dashboard
+                      <Link
+                        to="/admin"
+                        className="glass-btn glass-btn-primary admin-btn"
+                      >
+                        Admin Panel
                       </Link>
                     </>
                   ) : (

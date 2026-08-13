@@ -10,11 +10,14 @@ import { AuthProvider } from "./hooks/useAuth.jsx";
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import Efootball from "./pages/Efootball";
+import EfootballTopup from "./pages/EfootballTopup";   // ✅ NEW
+import FreefireTopup from "./pages/FreefireTopup";     // ✅ NEW
 import AdminLayout from "./pages/admin/AdminLayout";
 import AdminEfootball from "./pages/admin/AdminEfootball";
 import Profile from "./pages/Profile";
 import FloatingHelp from "./components/FloatingHelp";
 import { HelmetProvider } from "react-helmet-async";
+
 function App() {
   return (
     <HelmetProvider>
@@ -54,6 +57,8 @@ function AppContent() {
           element={<Home announcementVisible={announcementVisible} />}
         />
         <Route path="/efootball" element={<Efootball />} />
+        <Route path="/efootball/topup" element={<EfootballTopup />} />  {/* ✅ NEW */}
+        <Route path="/freefire/topup" element={<FreefireTopup />} />    {/* ✅ NEW */}
         <Route path="/profile" element={<Profile />} />
 
         <Route path="/admin" element={<AdminLayout />}>

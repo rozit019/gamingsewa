@@ -1,0 +1,385 @@
+
+
+
+.section-header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 48px;
+}
+
+.section-title-group h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  color: var(--text-primary);
+  letter-spacing: -0.01em;
+}
+
+
+
+.section-title-group p {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+}
+
+.view-all {
+  color: var(--color-primary-light);
+  font-weight: 600;
+  text-decoration: none;
+  transition: all var(--transition-fast);
+  font-size: 0.95rem;
+}
+
+.view-all:hover {
+  color: var(--color-primary);
+  transform: translateX(-4px);
+}
+
+/* Topup Cards Grid */
+
+
+@media (min-width: 640px) {
+  .cards-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .cards-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.topup-card {
+  background: var(--bg-card);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--border-subtle);
+  border-radius: 16px;
+  padding: 24px;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  position: relative;
+  overflow: hidden;
+}
+
+.topup-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at top right, rgba(59, 130, 246, 0.05), transparent 70%);
+  opacity: 0;
+  transition: opacity var(--transition-base);
+  pointer-events: none;
+}
+
+.topup-card:hover {
+  transform: translateY(-6px);
+  border-color: var(--border-blue-strong);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4), 0 0 30px rgba(29, 78, 216, 0.08);
+}
+
+.topup-card:hover::before {
+  opacity: 1;
+}
+
+.topup-card-selected {
+  border-color: var(--border-blue-strong);
+  background: rgba(30, 58, 138, 0.15);
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+.topup-card-popular {
+  border-color: rgba(168, 85, 247, 0.3);
+}
+
+.topup-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: linear-gradient(135deg, #a855f7 0%, #ec4899 100%);
+  color: white;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 5px 12px;
+  border-radius: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  box-shadow: 0 4px 12px rgba(168, 85, 247, 0.3);
+  z-index: 2;
+}
+
+.topup-card-icon {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.topup-card-icon img {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  border: 2px solid var(--border-blue);
+  padding: 8px;
+  background: var(--bg-surface);
+  object-fit: contain;
+}
+
+.topup-card-amount {
+  font-size: 1.5rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 8px;
+  color: var(--text-primary);
+  letter-spacing: -0.01em;
+}
+
+.topup-card-bonus {
+  color: var(--color-success);
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 16px;
+  font-size: 0.9rem;
+}
+
+.topup-card-price {
+  text-align: center;
+}
+
+.topup-price {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: var(--color-primary-light);
+}
+
+/* Topup Order Panel */
+.topup-order-panel {
+  max-width: 480px;
+  margin: 60px auto 0;
+  background: var(--bg-card);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--border-blue);
+  border-radius: 20px;
+  padding: 32px;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(59, 130, 246, 0.05);
+  position: sticky;
+  top: 24px;
+  z-index: 10;
+}
+
+.topup-order-panel h3 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin-bottom: 24px;
+  color: var(--text-primary);
+  letter-spacing: -0.01em;
+}
+
+.topup-order-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+}
+
+.topup-order-row span:last-child {
+  font-weight: 700;
+  color: var(--color-primary-light);
+}
+
+.topup-field {
+  display: block;
+  margin: 24px 0;
+  position: relative;
+  z-index: 1;
+}
+
+.topup-field span {
+  display: block;
+  margin-bottom: 10px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  letter-spacing: 0.01em;
+}
+
+.topup-field input {
+  width: 100%;
+  padding: 14px 18px;
+  background: rgba(6, 14, 31, 0.6);
+  border: 1px solid var(--border-blue);
+  border-radius: 12px;
+  color: var(--text-primary);
+  font-size: 0.95rem;
+  font-family: inherit;
+  transition: all var(--transition-base);
+  position: relative;
+  z-index: 1;
+}
+
+.topup-field input::placeholder {
+  color: var(--text-faint);
+}
+
+.topup-field input:focus {
+  outline: none;
+  border-color: var(--border-blue-strong);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.08);
+  background: rgba(6, 14, 31, 0.8);
+}
+
+.topup-payment-methods {
+  display: flex;
+  gap: 12px;
+  margin: 24px 0;
+  position: relative;
+  z-index: 1;
+}
+
+.topup-payment-methods button {
+  flex: 1;
+  padding: 14px;
+  border: 1px solid var(--border-blue);
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  background: rgba(6, 14, 31, 0.4);
+  color: var(--text-secondary);
+  transition: all var(--transition-base);
+  cursor: pointer;
+  position: relative;
+  z-index: 1;
+}
+
+.topup-payment-methods button:hover {
+  border-color: var(--border-blue-strong);
+  background: rgba(30, 58, 138, 0.15);
+}
+
+.topup-payment-methods button.active {
+  background: linear-gradient(135deg, #1d4ed8 0%, #3b82f6 100%);
+  color: white;
+  border-color: transparent;
+  box-shadow: 0 4px 16px rgba(29, 78, 216, 0.25);
+}
+
+.topup-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 0;
+  border-top: 1px solid var(--border-blue);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-top: 12px;
+}
+
+.topup-total span:last-child {
+  color: var(--color-primary-light);
+  font-size: 1.4rem;
+}
+
+.topup-checkout-btn {
+  width: 100%;
+  background: linear-gradient(135deg, #1d4ed8 0%, #3b82f6 100%);
+  color: white;
+  padding: 16px;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 1.05rem;
+  border: none;
+  transition: all var(--transition-base);
+  cursor: pointer;
+  position: relative;
+  z-index: 1;
+  margin-top: 16px;
+  letter-spacing: 0.01em;
+  box-shadow: 0 8px 24px rgba(29, 78, 216, 0.35);
+}
+
+.topup-checkout-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 32px rgba(29, 78, 216, 0.45);
+}
+
+.topup-checkout-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .page-banner {
+    padding: 60px 20px;
+  }
+
+  .page-banner h1 {
+    font-size: 2rem;
+  }
+
+  .banner-game-logo {
+    width: 72px;
+    height: 72px;
+  }
+
+  .game-section {
+    padding: 60px 20px;
+  }
+
+  .section-title-group h2 {
+    font-size: 1.5rem;
+  }
+
+  .section-header {
+    margin-bottom: 32px;
+  }
+
+  .topup-order-panel {
+    margin-top: 40px;
+    padding: 24px;
+  }
+
+  .topup-order-panel h3 {
+    font-size: 1.4rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-banner h1 {
+    font-size: 1.75rem;
+  }
+
+  .page-banner p {
+    font-size: 0.95rem;
+  }
+
+  .topup-card {
+    padding: 20px;
+  }
+
+  .topup-card-icon img {
+    width: 60px;
+    height: 60px;
+  }
+
+  .topup-order-panel {
+    padding: 20px;
+  }
+
+  .topup-payment-methods {
+    flex-direction: column;
+  }
+
+  .topup-payment-methods button {
+    padding: 12px;
+  }
+}
