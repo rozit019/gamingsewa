@@ -7,61 +7,109 @@ export default function TopupOrderPanel({ selectedPackage, game }) {
   const [playerId, setPlayerId] = useState("");
   const [payment, setPayment] = useState("esewa");
 
-  // WhatsApp number for Khelio (update this with your actual number)
-  const KHELIO_WHATSAPP = "9779812345678"; // Replace with actual number
+  const KHELIO_WHATSAPP = "9779841580244";
 
   const handleCheckout = () => {
     if (!playerId.trim()) return;
 
-    const topupDetails = {
-      game: game,
+    openWhatsAppForTopup(KHELIO_WHATSAPP, {
+      game,
       package: selectedPackage.label,
       price: selectedPackage.price,
       bonus: selectedPackage.bonus,
       playerId: playerId.trim(),
       payment: payment.toUpperCase(),
-    };
-
-    openWhatsAppForTopup(KHELIO_WHATSAPP, topupDetails);
+    });
   };
 
   if (!selectedPackage) return null;
 
-  return (
-    <div className="topup-order-panel">
-      <h3>Order Summary</h3>
+  const hasDiscount =
+    selectedPackage.originalPrice &&
+    Number(selectedPackage.originalPrice) > Number(selectedPackage.price);
 
-      <div className="topup-order-row">
-        <span>{selectedPackage.label}</span>
-        <span>NPR {selectedPackage.price}</span>
+  return (
+    <div className="order-panel">
+      <h2 className="order-title">Order Summary</h2>
+
+      {/* Package Card */}
+      <div className="order-package">
+        <img src={selectedPackage.icon} alt="" className="order-package-icon" />
+        <div className="order-package-info">
+          <div className="order-package-name">{selectedPackage.label}</div>
+          {selectedPackage.bonus && (
+            <div className="order-package-bonus">+{selectedPackage.bonus}</div>
+          )}
+        </div>
+        <div className="order-package-price">
+          {hasDiscount && (
+            <span className="order-price-original">
+              NPR {selectedPackage.originalPrice}
+            </span>
+          )}
+          <span className="order-price-current">
+            NPR {selectedPackage.price}
+          </span>
+        </div>
       </div>
 
-      <label className="topup-field">
-        <span>{game === "freefire" ? "Player ID (UID)" : "Player ID"}</span>
+      <div className="order-divider" />
+
+      {/* Player ID */}
+      <div className="order-field">
+        <label className="order-label">
+          {game === "freefire" ? "Player ID (UID)" : "Player ID"}
+        </label>
         <input
           type="text"
+          className="order-input"
           value={playerId}
           onChange={(e) => setPlayerId(e.target.value)}
           placeholder="Enter your in-game ID"
         />
-      </label>
-
-      <div className="topup-payment-methods">
-        <button className={payment === "esewa" ? "active" : ""} onClick={() => setPayment("esewa")}>
-          eSewa
-        </button>
-        <button className={payment === "khalti" ? "active" : ""} onClick={() => setPayment("khalti")}>
-          Khalti
-        </button>
       </div>
 
-      <div className="topup-total">
+      {/* Payment Method */}
+      <div className="order-field">
+        <label className="order-label">Pay With</label>
+        <div className="order-payment-options">
+          <button
+            type="button"
+            className={`order-payment-btn ${payment === "esewa" ? "active" : ""}`}
+            onClick={() => setPayment("esewa")}
+          >
+            <span className="payment-dot" />
+            eSewa
+          </button>
+          <button
+            type="button"
+            className={`order-payment-btn ${payment === "khalti" ? "active" : ""}`}
+            onClick={() => setPayment("khalti")}
+          >
+            <span className="payment-dot" />
+            Khalti
+          </button>
+        </div>
+      </div>
+
+      <div className="order-divider" />
+
+      {/* Total */}
+      <div className="order-total-row">
         <span>Total</span>
-        <span>NPR {selectedPackage.price}</span>
+        <div className="order-total-price">
+          {hasDiscount && (
+            <span className="order-price-original">
+              NPR {selectedPackage.originalPrice}
+            </span>
+          )}
+          <span className="order-price-final">NPR {selectedPackage.price}</span>
+        </div>
       </div>
 
+      {/* Checkout */}
       <button
-        className="topup-checkout-btn"
+        className="order-checkout-btn"
         disabled={!playerId.trim()}
         onClick={handleCheckout}
       >
