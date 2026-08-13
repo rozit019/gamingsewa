@@ -4,20 +4,16 @@ import { useState } from "react";
 import { openWhatsAppForTopup } from "../utils/whatsapp";
 
 export default function TopupOrderPanel({ selectedPackage, game }) {
-  const [playerId, setPlayerId] = useState("");
   const [payment, setPayment] = useState("esewa");
 
   const KHELIO_WHATSAPP = "9779841580244";
 
   const handleCheckout = () => {
-    if (!playerId.trim()) return;
-
     openWhatsAppForTopup(KHELIO_WHATSAPP, {
       game,
       package: selectedPackage.label,
       price: selectedPackage.price,
       bonus: selectedPackage.bonus,
-      playerId: playerId.trim(),
       payment: payment.toUpperCase(),
     });
   };
@@ -54,20 +50,6 @@ export default function TopupOrderPanel({ selectedPackage, game }) {
       </div>
 
       <div className="order-divider" />
-
-      {/* Player ID */}
-      <div className="order-field">
-        <label className="order-label">
-          {game === "freefire" ? "Player ID (UID)" : "Player ID"}
-        </label>
-        <input
-          type="text"
-          className="order-input"
-          value={playerId}
-          onChange={(e) => setPlayerId(e.target.value)}
-          placeholder="Enter your in-game ID"
-        />
-      </div>
 
       {/* Payment Method */}
       <div className="order-field">
@@ -107,12 +89,8 @@ export default function TopupOrderPanel({ selectedPackage, game }) {
         </div>
       </div>
 
-      {/* Checkout */}
-      <button
-        className="order-checkout-btn"
-        disabled={!playerId.trim()}
-        onClick={handleCheckout}
-      >
+      {/* Checkout — always active, no ID needed */}
+      <button className="order-checkout-btn" onClick={handleCheckout}>
         Proceed to Checkout
       </button>
     </div>
