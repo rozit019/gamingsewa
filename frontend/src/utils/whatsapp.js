@@ -16,3 +16,22 @@ export const openWhatsApp = (phoneNumber, account) => {
 
   window.open(`https://wa.me/${cleanNumber}?text=${message}`, "_blank");
 };
+
+export const openWhatsAppForTopup = (phoneNumber, topupDetails) => {
+  // Clean number: keep only digits (Nepal format: 97798XXXXXXXX)
+  const cleanNumber = phoneNumber.replace(/\D/g, "");
+
+  const message = encodeURIComponent(
+    `Hi Khelio! ` +
+      `I want to purchase a top-up:\n` +
+      `${topupDetails.game ? `• Game: ${topupDetails.game.toUpperCase()}\n` : ""}` +
+      `• Package: ${topupDetails.package}\n` +
+      `• Price: NPR ${topupDetails.price}\n` +
+      `${topupDetails.bonus ? `• Bonus: +${topupDetails.bonus}\n` : ""}` +
+      `• Player ID: ${topupDetails.playerId}\n` +
+      `• Payment Method: ${topupDetails.payment}\n` +
+      `\nPlease confirm and share payment details.`,
+  );
+
+  window.open(`https://wa.me/${cleanNumber}?text=${message}`, "_blank");
+};
