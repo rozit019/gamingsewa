@@ -82,8 +82,9 @@ export default function Navbar({
       )}
 
       <nav
-        className={`glass-navbar ${scrolled ? "scrolled" : ""} ${announcementVisible ? "with-announcement" : ""
-          }`}
+        className={`glass-navbar ${scrolled ? "scrolled" : ""} ${
+          announcementVisible ? "with-announcement" : ""
+        }`}
         style={{ top: `${topOffset}px` }}
       >
         <div className="glass-inner">
@@ -107,11 +108,11 @@ export default function Navbar({
                 Home
               </Link>
             </li>
-            <li>
+            {/* <li>
               <Link to="/#buy" onClick={() => setMobileOpen(false)}>
                 Buy
               </Link>
-            </li>
+            </li> */}
             <li>
               <Link to="/efootball" onClick={() => setMobileOpen(false)}>
                 <img
