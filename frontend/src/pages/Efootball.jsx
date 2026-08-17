@@ -15,19 +15,27 @@ export default function Efootball() {
     clearTimeout(hideTimeout.current);
     setActiveCard(data);
     const rect = cardEl.getBoundingClientRect();
+    const scrollY = window.scrollY || window.pageYOffset; // ← ADD THIS
+    const scrollX = window.scrollX || window.pageXOffset; // ← ADD THIS (for horizontal scroll)
+
     const pw = 340,
       ph = 420,
       gap = 20;
-    let left = rect.right + gap;
-    let top = rect.top + rect.height / 2 - ph / 2;
+
+    let left = rect.right + gap + scrollX; // ← ADD scrollX
+    let top = rect.top + scrollY + rect.height / 2 - ph / 2; // ← ADD scrollY
     let isLeft = false;
-    if (left + pw > window.innerWidth - gap) {
-      left = rect.left - pw - gap;
+
+    if (left + pw > window.innerWidth + scrollX - gap) {
+      left = rect.left + scrollX - pw - gap; // ← ADD scrollX
       isLeft = true;
     }
-    if (top < gap) top = gap;
-    if (top + ph > window.innerHeight - gap)
-      top = window.innerHeight - ph - gap;
+
+    // Boundary checks relative to document
+    if (top < scrollY + gap) top = scrollY + gap;
+    if (top + ph > scrollY + window.innerHeight - gap)
+      top = scrollY + window.innerHeight - ph - gap;
+
     setPanelLeftSide(isLeft);
     setPanelStyle({ left: `${left}px`, top: `${top}px` });
   };

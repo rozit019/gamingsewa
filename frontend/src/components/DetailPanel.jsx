@@ -28,6 +28,7 @@ export default function DetailPanel({
     price,
     originalPrice,
     features,
+    sold, // ← Added sold property
   } = activeCard || {};
 
   const hasDiscount = originalPrice && Number(originalPrice) > Number(price);
@@ -39,6 +40,7 @@ export default function DetailPanel({
 
   const badges = activeCard
     ? [
+        ...(sold ? [{ type: "sold", text: "SOLD" }] : []), // ← Added SOLD badge if item is sold
         { type: "rank", text: highestRank },
         { type: "rarity", text: rarity },
       ]
@@ -62,6 +64,7 @@ export default function DetailPanel({
   };
 
   const handleBuyNow = () => {
+    if (sold) return; // ← Prevent opening WhatsApp if sold
     openWhatsApp(BUSINESS_WHATSAPP, {
       id,
       game,
@@ -76,7 +79,9 @@ export default function DetailPanel({
     <>
       {activeCard && (
         <div
-          className={`detail-panel ${panelLeftSide ? "left-side" : ""} active`}
+          className={`detail-panel ${panelLeftSide ? "left-side" : ""} ${
+            sold ? "detail-panel-sold" : ""
+          } active`}
           style={panelStyle}
           onMouseEnter={onEnter}
           onMouseLeave={onLeave}
@@ -87,19 +92,29 @@ export default function DetailPanel({
               onClick={() => openLightbox(image, title)}
             >
               <img src={image} alt={title} />
-              <div className="detail-image-overlay">
-                <svg
-                  viewBox="0 0 24 24"
-                  width="14"
-                  height="14"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2.5"
-                >
-                  <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" />
-                </svg>
-                <span>Tap to view</span>
-              </div>
+
+              {/* SOLD Badge Overlay for Thumbnail */}
+              {sold && (
+                <div className="sold-overlay">
+                  <span className="sold-badge">SOLD</span>
+                </div>
+              )}
+
+              {!sold && (
+                <div className="detail-image-overlay">
+                  <svg
+                    viewBox="0 0 24 24"
+                    width="14"
+                    height="14"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.5"
+                  >
+                    <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" />
+                  </svg>
+                  <span>Tap to view</span>
+                </div>
+              )}
             </div>
           )}
 
@@ -145,7 +160,7 @@ export default function DetailPanel({
 
           <div className="detail-footer-popup">
             <div className="detail-price-wrap">
-              {hasDiscount && (
+              {hasDiscount && !sold && (
                 <>
                   <span className="detail-discount-badge">
                     -{discountPercent}% OFF
@@ -155,15 +170,31 @@ export default function DetailPanel({
                   </div>
                 </>
               )}
-              <div className="detail-price-discounted">Rs. {price}</div>
+              <div
+                className={`detail-price-discounted ${
+                  sold ? "detail-price-sold" : ""
+                }`}
+              >
+                {sold ? "SOLD OUT" : `Rs. ${price}`}
+              </div>
             </div>
-            <button className="btn-detail-buy" onClick={handleBuyNow}>
-              <svg viewBox="0 0 24 24">
-                <path d="M5 3l14 9-14 9V3z" />
-              </svg>
-              Buy Now
+            <button
+              className="btn-detail-buy"
+              onClick={handleBuyNow}
+              disabled={sold}
+            >
+              {!sold && (
+                <svg viewBox="0 0 24 24">
+                  <path d="M5 3l14 9-14 9V3z" />
+                </svg>
+              )}
+              {sold ? "Sold" : "Buy Now"}
             </button>
-            <button className="btn-detail-add" title="Add to Wishlist">
+            <button
+              className="btn-detail-add"
+              title="Add to Wishlist"
+              disabled={sold}
+            >
               <svg viewBox="0 0 24 24">
                 <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
               </svg>
