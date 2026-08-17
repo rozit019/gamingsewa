@@ -5,11 +5,12 @@ import User from "../models/User.js";
 const generateToken = (payload) => {
   return jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "30d" });
 };
-
 const cookieOptions = {
   httpOnly: true,
-  secure: true, // REQUIRED for sameSite: 'none'
-  sameSite: "none", // ← CHANGED from "strict" to "none"
+  secure: true,
+  sameSite: "none",
+  partitioned: true, // ← ADD THIS for Safari 16.4+ (iOS 16.4+)
+  path: "/", // ← ADD THIS to ensure cookie is sent to all paths
   maxAge: 30 * 24 * 60 * 60 * 1000,
 };
 
@@ -102,8 +103,10 @@ export const login = async (req, res) => {
 export const logout = async (req, res) => {
   res.cookie("token", "", {
     httpOnly: true,
-    secure: true, // ← add this
-    sameSite: "none", // ← add this
+    secure: true,
+    sameSite: "none",
+    partitioned: true, // ← ADD THIS
+    path: "/", // ← ADD THIS
     expires: new Date(0),
   });
   res.json({ message: "Logged out successfully" });
