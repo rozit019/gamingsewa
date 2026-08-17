@@ -21,6 +21,10 @@ const efootballSchema = new mongoose.Schema(
     badge: { type: String, default: null },
     features: [{ type: String }],
     game: { type: String, default: "efootball" },
+    sold: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true },
 );

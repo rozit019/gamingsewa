@@ -24,9 +24,9 @@ export default function GameCard({ data, onHover, onLeave }) {
     price,
     originalPrice,
     features,
+    sold, // <-- add this
   } = data;
 
-  // Use backend originalPrice if set, otherwise no discount
   const hasDiscount = originalPrice && Number(originalPrice) > Number(price);
   const discountPercent = hasDiscount
     ? Math.round(
@@ -36,6 +36,7 @@ export default function GameCard({ data, onHover, onLeave }) {
 
   const handleBuyNow = (e) => {
     e.stopPropagation();
+    if (sold) return; // Don't open WhatsApp if sold
     openWhatsApp(BUSINESS_WHATSAPP, {
       id,
       game,
@@ -48,19 +49,26 @@ export default function GameCard({ data, onHover, onLeave }) {
 
   return (
     <div
-      className="id-card"
+      className={`id-card ${sold ? "id-card-sold" : ""}`}
       ref={cardRef}
       onMouseEnter={() => onHover?.(data, cardRef.current)}
       onMouseLeave={onLeave}
     >
+      {/* SOLD Overlay */}
+      {sold && (
+        <div className="sold-overlay">
+          <span className="sold-badge">SOLD</span>
+        </div>
+      )}
+
       <div className="id-card-img">
         <img src={image} alt={title} />
-        {badge && (
+        {!sold && badge && (
           <span className={`id-card-badge ${badge.toLowerCase()}`}>
             {badge}
           </span>
         )}
-        {hasDiscount && (
+        {!sold && hasDiscount && (
           <span className="id-card-discount-badge">-{discountPercent}%</span>
         )}
         <span className={`id-card-rarity rarity-${rarity.toLowerCase()}`}>
@@ -81,13 +89,17 @@ export default function GameCard({ data, onHover, onLeave }) {
         </div>
         <div className="id-card-footer">
           <div className="id-price-wrap">
-            {hasDiscount && (
+            {hasDiscount && !sold && (
               <div className="id-price-original">Rs. {originalPrice}</div>
             )}
-            <div className="id-price-discounted">Rs. {price}</div>
+            <div
+              className={`id-price-discounted ${sold ? "id-price-sold" : ""}`}
+            >
+              {sold ? "SOLD OUT" : `Rs. ${price}`}
+            </div>
           </div>
-          <button className="btn-buy" onClick={handleBuyNow}>
-            Buy Now
+          <button className="btn-buy" onClick={handleBuyNow} disabled={sold}>
+            {sold ? "Sold" : "Buy Now"}
           </button>
         </div>
       </div>

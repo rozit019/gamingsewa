@@ -17,7 +17,7 @@ export default function EfootballTopup() {
           <h1>eFootball Coins Top-up</h1>
           <p>
             Instant coin delivery. Choose a package, enter your player ID, and
-            pay with eSewa or Khalti.
+            pay with Bank or Esewa.
           </p>
         </div>
       </section>

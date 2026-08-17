@@ -28,7 +28,6 @@ export const openWhatsAppForTopup = (phoneNumber, topupDetails) => {
       `• Package: ${topupDetails.package}\n` +
       `• Price: NPR ${topupDetails.price}\n` +
       `${topupDetails.bonus ? `• Bonus: +${topupDetails.bonus}\n` : ""}` +
-      `• Player ID: ${topupDetails.playerId}\n` +
       `• Payment Method: ${topupDetails.payment}\n` +
       `\nPlease confirm and share payment details.`,
   );

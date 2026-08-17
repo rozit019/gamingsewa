@@ -1941,3 +1941,68 @@ img {
     transform: translateY(0) scale(1);
   }
 }
+/* Sold Toggle Button */
+.btn-icon.sold-toggle {
+  background: rgba(74, 222, 128, 0.1);
+  border: 1px solid rgba(74, 222, 128, 0.3);
+  color: #4ade80;
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 6px 10px;
+  border-radius: 8px;
+  min-width: 36px;
+}
+
+.btn-icon.sold-toggle.sold-active {
+  background: rgba(239, 68, 68, 0.15);
+  border-color: rgba(239, 68, 68, 0.4);
+  color: #ef4444;
+}
+
+/* Status Pills */
+.status-sold {
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 6px;
+}
+
+.status-active {
+  background: rgba(74, 222, 128, 0.1);
+  color: #4ade80;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 6px;
+}
+
+/* Sold row dimming */
+.row-sold {
+  opacity: 0.6;
+}
+
+.row-sold .table-thumb {
+  filter: grayscale(100%);
+}
+
+/* Mobile sold card */
+.admin-card-sold {
+  opacity: 0.7;
+}
+
+.admin-card-sold .admin-card-thumb {
+  filter: grayscale(100%);
+}
+
+.sold-pill {
+  background: #ef4444;
+  color: white;
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 4px;
+  margin-left: 8px;
+  vertical-align: middle;
+}
