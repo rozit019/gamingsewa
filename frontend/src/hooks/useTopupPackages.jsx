@@ -8,7 +8,7 @@ export const useTopupPackages = (game) => {
         {
           id: 13,
           label: "Starter Set: Luis Suárez",
-          price: 200,
+          price: 230,
           originalPrice: "",
           icon: "/e.webp",
           popular: true,
@@ -19,7 +19,7 @@ export const useTopupPackages = (game) => {
         {
           id: 10,
           label: "260 Coins",
-          price: 220,
+          price: 255,
           originalPrice: 440,
           icon: "/e.webp",
           bonus: "130 Free",
@@ -28,7 +28,7 @@ export const useTopupPackages = (game) => {
         {
           id: 11,
           label: "840 Coins",
-          price: 880,
+          price: 1020,
           originalPrice: "",
           icon: "/e.webp",
           bonus: "290 Free",
@@ -37,7 +37,7 @@ export const useTopupPackages = (game) => {
         {
           id: 12,
           label: "1,630 Coins",
-          price: 1650,
+          price: 1905,
           originalPrice: "",
           icon: "/e.webp",
           bonus: "Extra Value",
@@ -49,7 +49,7 @@ export const useTopupPackages = (game) => {
         {
           id: 1,
           label: "130 Coins",
-          price: 220,
+          price: 255,
           originalPrice: "",
           icon: "/e.webp",
           popular: false,
@@ -57,7 +57,7 @@ export const useTopupPackages = (game) => {
         {
           id: 2,
           label: "300 Coins",
-          price: 495,
+          price: 575,
           originalPrice: "",
           icon: "/e.webp",
           popular: false,
@@ -65,7 +65,7 @@ export const useTopupPackages = (game) => {
         {
           id: 3,
           label: "550 Coins",
-          price: 880,
+          price: 1020,
           originalPrice: "",
           icon: "/e.webp",
           popular: false,
@@ -73,7 +73,7 @@ export const useTopupPackages = (game) => {
         {
           id: 4,
           label: "750 Coins",
-          price: 1200,
+          price: 1390,
           originalPrice: "",
           icon: "/e.webp",
           popular: false,
@@ -81,7 +81,7 @@ export const useTopupPackages = (game) => {
         {
           id: 5,
           label: "1,040 Coins",
-          price: 1615,
+          price: 1865,
           originalPrice: "",
           icon: "/e.webp",
           popular: false,
@@ -89,7 +89,7 @@ export const useTopupPackages = (game) => {
         {
           id: 6,
           label: "2,130 Coins",
-          price: 3300,
+          price: 3810,
           originalPrice: "",
           icon: "/e.webp",
           popular: false,
@@ -97,7 +97,7 @@ export const useTopupPackages = (game) => {
         {
           id: 7,
           label: "3,250 Coins",
-          price: 4950,
+          price: 5715,
           originalPrice: "",
           icon: "/e.webp",
           popular: false,
@@ -105,7 +105,7 @@ export const useTopupPackages = (game) => {
         {
           id: 8,
           label: "5,700 Coins",
-          price: 8400,
+          price: 9700,
           originalPrice: "",
           icon: "/e.webp",
           popular: false,
@@ -113,7 +113,7 @@ export const useTopupPackages = (game) => {
         {
           id: 9,
           label: "12,800 Coins",
-          price: 17500,
+          price: 20205,
           originalPrice: "",
           icon: "/e.webp",
           popular: false,
