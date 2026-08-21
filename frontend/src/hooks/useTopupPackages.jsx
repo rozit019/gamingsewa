@@ -13,6 +13,14 @@ export const useTopupPackages = (game) => {
           icon: "/e.webp",
           popular: true,
         },
+        {
+          id: 14,
+          label: "Starter Set: Casillas Pack",
+          price: 500,
+          originalPrice: "",
+          icon: "/e.webp",
+          popular: true,
+        },
       ];
 
       const discount = [
