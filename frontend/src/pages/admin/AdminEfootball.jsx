@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { API_URL } from "../../config/api";
 import AddAccountModal from "../../components/AddAccountModal";
 
@@ -33,6 +33,11 @@ export default function AdminEfootball() {
   useEffect(() => {
     fetchAccounts();
   }, []);
+
+  // Available first, sold last
+  const sortedAccounts = useMemo(() => {
+    return [...accounts].sort((a, b) => Number(!!a.sold) - Number(!!b.sold));
+  }, [accounts]);
 
   const handleDelete = async (id) => {
     if (!confirm("Delete this account permanently?")) return;
@@ -113,7 +118,7 @@ export default function AdminEfootball() {
           {isMobile ? (
             /* MOBILE CARDS */
             <div className="admin-cards">
-              {accounts.map((acc) => (
+              {sortedAccounts.map((acc) => (
                 <div
                   key={acc._id}
                   className={`admin-card ${acc.sold ? "admin-card-sold" : ""}`}
@@ -157,7 +162,6 @@ export default function AdminEfootball() {
                     </span>
                   </div>
                   <div className="admin-card-actions">
-                    {/* SOLD TOGGLE */}
                     <button
                       type="button"
                       className={`btn-icon sold-toggle ${acc.sold ? "sold-active" : ""}`}
@@ -201,7 +205,7 @@ export default function AdminEfootball() {
                   </div>
                 </div>
               ))}
-              {accounts.length === 0 && (
+              {sortedAccounts.length === 0 && (
                 <div className="td-empty">No accounts found.</div>
               )}
             </div>
@@ -224,7 +228,7 @@ export default function AdminEfootball() {
                   </tr>
                 </thead>
                 <tbody>
-                  {accounts.map((acc) => (
+                  {sortedAccounts.map((acc) => (
                     <tr key={acc._id} className={acc.sold ? "row-sold" : ""}>
                       <td>
                         <img
@@ -268,7 +272,6 @@ export default function AdminEfootball() {
                       </td>
                       <td>
                         <div className="table-actions">
-                          {/* SOLD TOGGLE */}
                           <button
                             type="button"
                             className={`btn-icon sold-toggle ${acc.sold ? "sold-active" : ""}`}
@@ -313,7 +316,7 @@ export default function AdminEfootball() {
                       </td>
                     </tr>
                   ))}
-                  {accounts.length === 0 && (
+                  {sortedAccounts.length === 0 && (
                     <tr>
                       <td colSpan="10" className="td-empty">
                         No accounts found.
