@@ -24,33 +24,33 @@ export const useTopupPackages = (game) => {
       ];
 
       const discount = [
-        {
-          id: 10,
-          label: "260 Coins",
-          price: 255,
-          originalPrice: 440,
-          icon: "/e.webp",
-          bonus: "130 Free",
-          popular: false,
-        },
-        {
-          id: 11,
-          label: "840 Coins",
-          price: 1020,
-          originalPrice: "",
-          icon: "/e.webp",
-          bonus: "290 Free",
-          popular: false,
-        },
-        {
-          id: 12,
-          label: "1,630 Coins",
-          price: 1905,
-          originalPrice: "",
-          icon: "/e.webp",
-          bonus: "Extra Value",
-          popular: false,
-        },
+        // {
+        //   id: 10,
+        //   label: "260 Coins",
+        //   price: 255,
+        //   originalPrice: 440,
+        //   icon: "/e.webp",
+        //   bonus: "130 Free",
+        //   popular: false,
+        // },
+        // {
+        //   id: 11,
+        //   label: "840 Coins",
+        //   price: 1020,
+        //   originalPrice: "",
+        //   icon: "/e.webp",
+        //   bonus: "290 Free",
+        //   popular: false,
+        // },
+        // {
+        //   id: 12,
+        //   label: "1,630 Coins",
+        //   price: 1905,
+        //   originalPrice: "",
+        //   icon: "/e.webp",
+        //   bonus: "Extra Value",
+        //   popular: false,
+        // },
       ];
 
       const regular = [
